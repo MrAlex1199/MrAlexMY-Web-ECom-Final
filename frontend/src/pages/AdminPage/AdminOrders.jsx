@@ -5,6 +5,7 @@ import {
   Package, Truck, CheckCircle, XCircle, AlertCircle,
   Edit, Trash2, ChevronDown, ChevronUp, Calendar, MapPin, User, Clock, X
 } from "lucide-react";
+import { API_BASE_URL } from "../../config/api";
 import "../../Styles/loader.css";
 
 export default function AdminManageOrders({ adminData }) {
@@ -32,7 +33,7 @@ export default function AdminManageOrders({ adminData }) {
           return;
         }
 
-        const response = await fetch("http://localhost:3001/api/orders/admin/all", {
+        const response = await fetch(`${API_BASE_URL}/api/orders/admin/all`, {
           headers: {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json"
@@ -108,7 +109,7 @@ export default function AdminManageOrders({ adminData }) {
 
     try {
       const token = localStorage.getItem("AToken");
-      const response = await fetch(`http://localhost:3001/api/orders/admin/${currentEditOrder.orderId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/orders/admin/${currentEditOrder.orderId}`, {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",
@@ -145,7 +146,7 @@ export default function AdminManageOrders({ adminData }) {
 
     try {
       const token = localStorage.getItem("AToken");
-      const response = await fetch(`http://localhost:3001/api/orders/admin/${orderToDelete.orderId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/orders/admin/${orderToDelete.orderId}`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${token}`

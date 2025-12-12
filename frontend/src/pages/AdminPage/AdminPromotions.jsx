@@ -3,7 +3,8 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import Sidebar from "../../components/AdminComponents/Sidebar";
 import Header from "../../components/AdminComponents/header";
-import { useRealtimeProducts, notifyDataChange } from "../../utils/realtime";
+import { subscribeToProducts, notifyDataChange } from "../../utils/realtime";
+import { API_BASE_URL } from "../../config/api";
 import {
   Package, Percent, Search, X, Trash2, Edit3, TrendingDown,
 } from "lucide-react";
@@ -26,7 +27,7 @@ export default function AdminPromotions({ adminData }) {
 
   // Real-time updates for promotions
   useEffect(() => {
-    const unsubscribe = useRealtimeProducts((data, meta) => {
+    const unsubscribe = subscribeToProducts((data, meta) => {
       if (meta.isUpdate) {
         const productsData = data.products || data.data || data || [];
         const currentPromotions = products.filter(p => p.discount > 0).length;
@@ -64,7 +65,7 @@ export default function AdminPromotions({ adminData }) {
     try {
       const token = localStorage.getItem('AToken');
       const timestamp = new Date().getTime();
-      const res = await axios.get(`http://localhost:3001/api/products?_t=${timestamp}`, {
+      const res = await axios.get(`${API_BASE_URL}/api/products?_t=${timestamp}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Cache-Control': 'no-cache',
@@ -133,7 +134,7 @@ export default function AdminPromotions({ adminData }) {
     try {
       const token = localStorage.getItem('AToken');
       const response = await axios.put(
-        `http://localhost:3001/api/products/${selectedProduct._id}/discount`,
+        `${API_BASE_URL}/api/products/${selectedProduct._id}/discount`,
         { discount: parseInt(discountValue) },
         {
           headers: {
@@ -174,7 +175,7 @@ export default function AdminPromotions({ adminData }) {
 
     try {
       const token = localStorage.getItem('AToken');
-      const response = await axios.put(`http://localhost:3001/api/products/${productId}/remove-discount`, {}, {
+      const response = await axios.put(`${API_BASE_URL}/api/products/${productId}/remove-discount`, {}, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

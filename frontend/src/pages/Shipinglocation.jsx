@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { API_BASE_URL } from "../config/api";
 
 export default function ShippingLocations({ userData, userId }) {
   // State variables for User Address
@@ -26,7 +27,7 @@ export default function ShippingLocations({ userData, userId }) {
         return;
       }
 
-      const response = await fetch("http://localhost:3001/api/users/save-address", {
+      const response = await fetch(`${API_BASE_URL}/api/users/save-address`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
@@ -72,7 +73,7 @@ export default function ShippingLocations({ userData, userId }) {
           return;
         }
 
-        const response = await fetch(`http://localhost:3001/api/users/delete-address/${userId}/${addressId}`, {
+        const response = await fetch(`${API_BASE_URL}/api/users/delete-address/${userId}/${addressId}`, {
           method: "DELETE",
           headers: { 
             "Content-Type": "application/json",
@@ -135,7 +136,7 @@ export default function ShippingLocations({ userData, userId }) {
         return;
       }
 
-      const response = await fetch(`http://localhost:3001/api/users/update-address/${userId}/${editingAddressId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/users/update-address/${userId}/${editingAddressId}`, {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",

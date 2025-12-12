@@ -4,6 +4,7 @@ import Footer from "./components/footer";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { Toaster } from 'react-hot-toast';
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { API_BASE_URL } from "./config/api";
 import ProtectedRoute from "./ProtectedRoute";
 import Home from "./pages/home";
 // import SimpleHome from "./pages/SimpleHome";
@@ -115,7 +116,7 @@ export default function App() {
       
       try {
         console.log("Verifying admin token...");
-        const response = await fetch("http://localhost:3001/api/auth/admin", {
+        const response = await fetch(`${API_BASE_URL}/api/auth/admin`, {
           method: "GET",
           headers: { 
             "Authorization": `Bearer ${Atoken}`,
@@ -201,7 +202,7 @@ export default function App() {
       const token = localStorage.getItem("token");
       if (token) {
         try {
-          const response = await fetch("http://localhost:3001/api/auth/user", {
+          const response = await fetch(`${API_BASE_URL}/api/auth/user`, {
             method: "GET",
             headers: { 
               "Authorization": `Bearer ${token}`,
@@ -238,7 +239,7 @@ export default function App() {
       if (userData.userId) {
         try {
           const token = localStorage.getItem("token");
-          const response = await fetch(`http://localhost:3001/api/cart/${userData.userId}`, {
+          const response = await fetch(`${API_BASE_URL}/api/cart/${userData.userId}`, {
             method: "GET",
             headers: {
               "Authorization": `Bearer ${token}`,

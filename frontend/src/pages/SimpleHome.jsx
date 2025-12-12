@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { API_BASE_URL } from "../config/api";
 
 export default function SimpleHome() {
   const [products, setProducts] = useState([]);
@@ -10,7 +11,7 @@ export default function SimpleHome() {
     const fetchProducts = async () => {
       try {
         console.log('Fetching products from Home...');
-        const response = await fetch("http://localhost:3001/api/products");
+        const response = await fetch(`${API_BASE_URL}/api/products`);
         console.log('Response status:', response.status);
         
         if (!response.ok) {

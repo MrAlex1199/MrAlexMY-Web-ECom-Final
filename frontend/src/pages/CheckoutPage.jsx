@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { API_BASE_URL } from "../config/api";
 
 export default function CheckoutPage({ userId, selectedProducts = [] }) {
   const [stockErrors, setStockErrors] = useState([]);
@@ -19,7 +20,7 @@ export default function CheckoutPage({ userId, selectedProducts = [] }) {
 
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:3001/api/validate-stock", {
+      const res = await fetch(`${API_BASE_URL}/api/validate-stock`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ productSelected }),

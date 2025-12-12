@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { API_BASE_URL } from "../config/api";
 
 export default function Cart({ userId, userData, selectedProducts, setSelectedProducts }) {
   const [shippingAddressId, setShippingAddressId] = useState("");
@@ -27,7 +28,7 @@ export default function Cart({ userId, userData, selectedProducts, setSelectedPr
       const productIds = selectedProducts.map(item => item.productId._id);
       
       try {
-        const response = await fetch("http://localhost:3001/api/products/stock", {
+        const response = await fetch(`${API_BASE_URL}/api/products/stock`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ productIds }),
@@ -60,8 +61,8 @@ export default function Cart({ userId, userData, selectedProducts, setSelectedPr
       }
 
       const url = newQuantity <= 0
-        ? `http://localhost:3001/api/cart/delete-product/${userId}/${productId}`
-        : `http://localhost:3001/api/cart/update-quantity/${userId}/${productId}`;
+        ? `${API_BASE_URL}/api/cart/delete-product/${userId}/${productId}`
+        : `${API_BASE_URL}/api/cart/update-quantity/${userId}/${productId}`;
 
       const response = await fetch(url, {
         method: newQuantity <= 0 ? "DELETE" : "PUT",
@@ -143,7 +144,7 @@ export default function Cart({ userId, userData, selectedProducts, setSelectedPr
       };
 
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:3001/api/orders/save", {
+      const response = await fetch(`${API_BASE_URL}/api/orders/save`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
@@ -154,7 +155,7 @@ export default function Cart({ userId, userData, selectedProducts, setSelectedPr
 
       if (!response.ok) throw new Error("Failed to save order details");
 
-      await fetch(`http://localhost:3001/api/cart/clear/${userId}`, { 
+      await fetch(`${API_BASE_URL}/api/cart/clear/${userId}`, { 
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${token}`

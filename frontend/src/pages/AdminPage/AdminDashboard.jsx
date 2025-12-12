@@ -16,6 +16,7 @@ import {
 import { Pie, Bar, Line } from "react-chartjs-2";
 import Sidebar from "../../components/AdminComponents/Sidebar";
 import Header from "../../components/AdminComponents/header";
+import { API_BASE_URL } from "../../config/api";
 import {
   Users, Package, DollarSign, TrendingUp, ShoppingCart,
   Calendar, Download, ChevronRight
@@ -210,9 +211,9 @@ export default function Overview({ adminData }) {
         };
 
         const [usersRes, productsRes, ordersRes] = await Promise.allSettled([
-          fetchWithTimeout("http://localhost:3001/api/users/users", { headers }).catch(() => ({ json: () => ({ success: false, users: [] }) })),
-          fetchWithTimeout("http://localhost:3001/api/products", { headers }).catch(() => ({ json: () => ({ success: false, products: [] }) })),
-          fetchWithTimeout("http://localhost:3001/api/orders/admin/all", { headers }).catch(() => ({ json: () => [] })),
+          fetchWithTimeout(`${API_BASE_URL}/api/users/users`, { headers }).catch(() => ({ json: () => ({ success: false, users: [] }) })),
+          fetchWithTimeout(`${API_BASE_URL}/api/products`, { headers }).catch(() => ({ json: () => ({ success: false, products: [] }) })),
+          fetchWithTimeout(`${API_BASE_URL}/api/orders/admin/all`, { headers }).catch(() => ({ json: () => [] })),
         ]);
 
         // Handle Promise.allSettled results
@@ -324,9 +325,9 @@ export default function Overview({ adminData }) {
           };
 
           const [usersRes, productsRes, ordersRes] = await Promise.allSettled([
-            fetchWithTimeout("http://localhost:3001/api/users/users", { headers }).catch(() => ({ json: () => ({ success: false, users: [] }) })),
-            fetchWithTimeout("http://localhost:3001/api/products", { headers }).catch(() => ({ json: () => ({ success: false, products: [] }) })),
-            fetchWithTimeout("http://localhost:3001/api/orders/admin/all", { headers }).catch(() => ({ json: () => [] })),
+            fetchWithTimeout(`${API_BASE_URL}/api/users/users`, { headers }).catch(() => ({ json: () => ({ success: false, users: [] }) })),
+            fetchWithTimeout(`${API_BASE_URL}/api/products`, { headers }).catch(() => ({ json: () => ({ success: false, products: [] }) })),
+            fetchWithTimeout(`${API_BASE_URL}/api/orders/admin/all`, { headers }).catch(() => ({ json: () => [] })),
           ]);
 
           // Handle Promise.allSettled results

@@ -5,7 +5,8 @@ import toast, { Toaster } from "react-hot-toast";
 import Sidebar from "../../components/AdminComponents/Sidebar";
 import Header from "../../components/AdminComponents/header";
 import { Plus, Upload, Edit, Trash2, X, ChevronLeft, ChevronRight, Package, } from "lucide-react";
-import { useRealtimeProducts, notifyDataChange } from "../../utils/realtime";
+import { subscribeToProducts, notifyDataChange } from "../../utils/realtime";
+import { API_BASE_URL } from "../../config/api";
 import "../../Styles/loader.css";
 
 const initialNewProductState = {
@@ -46,7 +47,7 @@ export default function AdminManageProducts({ adminData }) {
 
   // Real-time updates for products
   useEffect(() => {
-    const unsubscribe = useRealtimeProducts((data, meta) => {
+    const unsubscribe = subscribeToProducts((data, meta) => {
       if (meta.isUpdate) {
         const productsData = data.products || data.data || data || [];
         const currentCount = products.length;
@@ -87,7 +88,7 @@ export default function AdminManageProducts({ adminData }) {
       
       // Add timestamp to prevent caching
       const timestamp = new Date().getTime();
-      const response = await axios.get(`http://localhost:3001/api/products?_t=${timestamp}`, { headers });
+      const response = await axios.get(`${API_BASE_URL}/api/products?_t=${timestamp}`, { headers });
       
       // Handle different response formats
       const productsData = response.data.products || response.data.data || response.data || [];
@@ -112,7 +113,7 @@ export default function AdminManageProducts({ adminData }) {
       const token = localStorage.getItem("AToken");
       const headers = token ? { "Authorization": `Bearer ${token}` } : {};
       
-      const response = await axios.delete(`http://localhost:3001/api/products/${productId}`, { headers });
+      const response = await axios.delete(`${API_BASE_URL}/api/products/${productId}`, { headers });
       
       if (response.data.success) {
         toast.success(`ลบสินค้า "${productName}" สำเร็จ!`);
@@ -178,7 +179,7 @@ export default function AdminManageProducts({ adminData }) {
       const token = localStorage.getItem("AToken");
       const headers = token ? { "Authorization": `Bearer ${token}` } : {};
       
-      const response = await axios.post("http://localhost:3001/api/products", payload, { headers });
+      const response = await axios.post(`${API_BASE_URL}/api/products`, payload, { headers });
       
       if (response.data.success) {
         toast.success("เพิ่มสินค้าสำเร็จ!");
@@ -217,7 +218,7 @@ export default function AdminManageProducts({ adminData }) {
         ...(token && { "Authorization": `Bearer ${token}` })
       };
       
-      const response = await axios.post("http://localhost:3001/api/products/upload-images", formData, { headers });
+      const response = await axios.post(`${API_BASE_URL}/api/products/upload-images`, formData, { headers });
 
       if (response.data.success) {
         return response.data.urls;
@@ -237,7 +238,7 @@ export default function AdminManageProducts({ adminData }) {
       const token = localStorage.getItem("AToken");
       const headers = token ? { "Authorization": `Bearer ${token}` } : {};
       
-      const response = await axios.put(`http://localhost:3001/api/products/${productToEdit._id}`, productToEdit, { headers });
+      const response = await axios.put(`${API_BASE_URL}/api/products/${productToEdit._id}`, productToEdit, { headers });
       
       if (response.data.success) {
         toast.success("อัปเดตสินค้าสำเร็จ!");
@@ -288,7 +289,7 @@ export default function AdminManageProducts({ adminData }) {
         ...(token && { "Authorization": `Bearer ${token}` })
       };
       
-      await axios.post("http://localhost:3001/api/products/upload-csv", formData, { headers });
+      await axios.post(`${API_BASE_URL}/api/products/upload-csv`, formData, { headers });
       alert("อัปโหลด CSV สำเร็จ!");
       setFile(null);
       setCsvPreview([]);

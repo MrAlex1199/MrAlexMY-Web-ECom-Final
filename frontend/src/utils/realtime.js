@@ -1,5 +1,6 @@
 // Real-time update utilities
 import toast from 'react-hot-toast';
+import { API_BASE_URL } from '../config/api';
 
 class RealtimeManager {
   constructor() {
@@ -72,21 +73,21 @@ class RealtimeManager {
       // Determine endpoint based on data type
       switch (dataType) {
         case 'products':
-          endpoint = 'http://localhost:3001/api/products';
+          endpoint = `${API_BASE_URL}/api/products`;
           const adminToken = localStorage.getItem("AToken");
           if (adminToken) {
             headers['Authorization'] = `Bearer ${adminToken}`;
           }
           break;
         case 'orders':
-          endpoint = 'http://localhost:3001/api/orders/admin/all';
+          endpoint = `${API_BASE_URL}/api/orders/admin/all`;
           const token = localStorage.getItem("AToken");
           if (token) {
             headers['Authorization'] = `Bearer ${token}`;
           }
           break;
         case 'users':
-          endpoint = 'http://localhost:3001/api/users/users';
+          endpoint = `${API_BASE_URL}/api/users/users`;
           const userToken = localStorage.getItem("AToken");
           if (userToken) {
             headers['Authorization'] = `Bearer ${userToken}`;
@@ -158,16 +159,17 @@ class RealtimeManager {
 // Create singleton instance
 const realtimeManager = new RealtimeManager();
 
-// Export hooks for easy use in components
-export const useRealtimeProducts = (callback, interval = 30000) => {
+// Export subscription functions for easy use in components
+// Note: These are NOT React hooks, they are subscription functions
+export const subscribeToProducts = (callback, interval = 30000) => {
   return realtimeManager.subscribe('products', callback, interval);
 };
 
-export const useRealtimeOrders = (callback, interval = 30000) => {
+export const subscribeToOrders = (callback, interval = 30000) => {
   return realtimeManager.subscribe('orders', callback, interval);
 };
 
-export const useRealtimeUsers = (callback, interval = 60000) => {
+export const subscribeToUsers = (callback, interval = 60000) => {
   return realtimeManager.subscribe('users', callback, interval);
 };
 

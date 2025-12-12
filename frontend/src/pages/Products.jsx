@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../Styles/loader.css";
-// import { products } from "../ProductsData/ProductsData.js";
+import { API_BASE_URL } from "../config/api";
 
 const productsPerPage = 8;
 
@@ -14,7 +14,7 @@ export default function Products() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:3001/api/products");
+        const response = await fetch(`${API_BASE_URL}/api/products`);
         const data = await response.json();
         
         // Handle different response formats

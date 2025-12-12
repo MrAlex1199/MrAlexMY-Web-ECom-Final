@@ -5,6 +5,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import bg1 from "../components/bg/bg1.jpg";
 import bg2 from "../components/bg/bg2.jpg";
 import bg3 from "../components/bg/bg3.jpg";
+import { API_BASE_URL } from "../config/api";
 
 const productsPerPage = 8;
 
@@ -43,7 +44,7 @@ export default function Home() {
     const fetchProducts = async () => {
       try {
         // Changed from /api/new-products to /api/products
-        const response = await fetch("http://localhost:3001/api/products");
+        const response = await fetch(`${API_BASE_URL}/api/products`);
         const data = await response.json();
         
         // Handle different response formats

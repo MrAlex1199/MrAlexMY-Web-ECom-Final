@@ -3,6 +3,7 @@ import { StarIcon } from "@heroicons/react/20/solid";
 import { RadioGroup } from "@headlessui/react";
 import { useParams, useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
+import { API_BASE_URL } from "../config/api";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -208,7 +209,7 @@ export default function ProductsDetails({ userId, userData }) {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`http://localhost:3001/api/products/${id}`);
+      const response = await fetch(`${API_BASE_URL}/api/products/${id}`);
       if (!response.ok) throw new Error(`Error fetching product: ${response.status}`);
       const data = await response.json();
       if (data) {
@@ -246,7 +247,7 @@ export default function ProductsDetails({ userId, userData }) {
     }
     
     try {
-      const response = await fetch("http://localhost:3001/save-selected-products", {
+      const response = await fetch(`${API_BASE_URL}/save-selected-products`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -287,7 +288,7 @@ export default function ProductsDetails({ userId, userData }) {
         navigate("/register");
         return;
       }
-      const response = await fetch(`http://localhost:3001/products/${id}/comments`, {
+      const response = await fetch(`${API_BASE_URL}/products/${id}/comments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -309,7 +310,7 @@ export default function ProductsDetails({ userId, userData }) {
 
   const handleDeleteComment = async (commentId) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/products/${id}/comments/${commentId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/products/${id}/comments/${commentId}`, {
         method: "DELETE",
       });
       if (!response.ok) throw new Error(`Failed to delete comment: ${response.status}`);
