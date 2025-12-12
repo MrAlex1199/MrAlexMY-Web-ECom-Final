@@ -1,7 +1,28 @@
 // API Configuration for Production/Development
 // This file centralizes all API URL configuration
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+// Detect environment and set API URL
+const getApiUrl = () => {
+  // Check for environment variable first
+  if (process.env.REACT_APP_API_URL) {
+    return process.env.REACT_APP_API_URL;
+  }
+  
+  // Auto-detect based on current hostname
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    
+    // If running on Railway (production)
+    if (hostname.includes('railway.app')) {
+      return 'https://mralexmy-web-ecom-final-production.up.railway.app';
+    }
+  }
+  
+  // Default to localhost for development
+  return 'http://localhost:3001';
+};
+
+const API_BASE_URL = getApiUrl();
 
 // Helper function to build API URLs
 export const buildUrl = (path) => `${API_BASE_URL}${path}`;
