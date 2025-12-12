@@ -1,8 +1,8 @@
 // Remove toast imports to avoid circular dependency issues
 // import { showError, showLoading, dismissToast } from '../utils/toast';
 
-// API Service Layer
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+// Import centralized API URL
+import { API_BASE_URL } from '../config/api';
 
 class ApiService {
   constructor() {
