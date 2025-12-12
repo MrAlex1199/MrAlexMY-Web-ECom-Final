@@ -1,0 +1,285 @@
+# ===================================
+# E-COMMERCE PROJECT - GITIGNORE
+# ===================================
+
+# ===================================
+# ENVIRONMENT & CONFIGURATION FILES
+# ===================================
+# Environment variables (CRITICAL - Contains sensitive data)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.example
+backend/.env
+frontend/.env.local
+frontend/.env.production
+
+# Configuration files with sensitive data
+config/database.js
+config/secrets.js
+config/keys.js
+
+# ===================================
+# NODE.JS & NPM
+# ===================================
+# Dependencies
+node_modules/
+*/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Package manager files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lock
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# ===================================
+# BUILD & PRODUCTION FILES
+# ===================================
+# Build outputs
+build/
+dist/
+*/build/
+*/dist/
+.next/
+out/
+
+# Production bundles
+*.tgz
+*.tar.gz
+
+# ===================================
+# LOGS & MONITORING
+# ===================================
+# Application logs
+logs/
+*.log
+backend/logs/
+backend/logs/*.log
+combined.log
+error.log
+access.log
+
+# PM2 logs
+.pm2/
+
+# ===================================
+# DATABASE & UPLOADS
+# ===================================
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+database.json
+
+# Upload directories
+uploads/
+backend/uploads/
+frontend/public/uploads/
+temp/
+tmp/
+
+# ===================================
+# SECURITY & AUTHENTICATION
+# ===================================
+# JWT secrets and keys
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets/
+keys/
+
+# Session files
+sessions/
+.sessions
+
+# ===================================
+# DEVELOPMENT TOOLS
+# ===================================
+# IDE and editor files
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ===================================
+# TESTING & COVERAGE
+# ===================================
+# Test coverage
+coverage/
+.nyc_output/
+.coverage
+*.lcov
+
+# Test files
+test-results/
+playwright-report/
+test-results.xml
+
+# ===================================
+# CACHE & TEMPORARY FILES
+# ===================================
+# Cache directories
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# ===================================
+# CLOUDINARY & EXTERNAL SERVICES
+# ===================================
+# Cloudinary cache
+.cloudinary/
+
+# ===================================
+# DOCUMENTATION & NOTES
+# ===================================
+# Personal notes and documentation that shouldn't be shared
+NOTES.md
+TODO.md
+PRIVATE_*.md
+*_PRIVATE.md
+*_SECRET.md
+ADMIN_CREDENTIALS.md
+
+# ===================================
+# BACKUP & ARCHIVE FILES
+# ===================================
+# Backup files
+*.bak
+*.backup
+*.old
+backup/
+backups/
+
+# Archive files
+*.zip
+*.rar
+*.7z
+*.tar
+*.gz
+
+# ===================================
+# WINDOWS SPECIFIC
+# ===================================
+# Windows crash dumps
+*.stackdump
+bash.exe.stackdump
+
+# Windows shortcuts
+*.lnk
+
+# ===================================
+# MACOS SPECIFIC
+# ===================================
+# macOS system files
+.AppleDouble
+.LSOverride
+Icon?
+
+# ===================================
+# LINUX SPECIFIC
+# ===================================
+# Linux trash folder
+.Trash-*
+
+# ===================================
+# DOCKER & CONTAINERS
+# ===================================
+# Docker files (if not needed in repo)
+# Dockerfile.dev
+# docker-compose.override.yml
+
+# ===================================
+# MONITORING & ANALYTICS
+# ===================================
+# Analytics and monitoring data
+analytics/
+metrics/
+.monitoring/
+
+# ===================================
+# CUSTOM PROJECT SPECIFIC
+# ===================================
+# Admin system sensitive files
+admin-setup.json
+master-keys.json
+
+# Customer data exports
+customer-exports/
+order-exports/
+
+# Payment gateway test files
+payment-test/
+stripe-test/
+paypal-test/
+
+# Email templates with sensitive info
+email-templates/private/
+
+# ===================================
+# DEVELOPMENT ONLY FILES
+# ===================================
+# Files that should only exist in development
+dev-only/
+development/
+.dev/
+
+# Test data
+test-data/
+mock-data/
+sample-data/
+
+# ===================================
+# SECURITY SCANS & REPORTS
+# ===================================
+# Security scan results
+security-report/
+vulnerability-report/
+audit-report/
+
+# ===================================
+# PERFORMANCE & PROFILING
+# ===================================
+# Performance profiling
+.clinic/
+profile/
+*.cpuprofile
+*.heapprofile
+
+# ===================================
+# END OF GITIGNORE
+# ===================================

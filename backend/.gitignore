@@ -1,0 +1,81 @@
+# ===================================
+# BACKEND SPECIFIC GITIGNORE
+# ===================================
+
+# ===================================
+# ENVIRONMENT & SECRETS
+# ===================================
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# ===================================
+# NODE.JS
+# ===================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# ===================================
+# LOGS
+# ===================================
+logs/
+*.log
+combined.log
+error.log
+access.log
+
+# ===================================
+# UPLOADS & TEMP FILES
+# ===================================
+uploads/
+temp/
+tmp/
+
+# ===================================
+# DATABASE
+# ===================================
+*.db
+*.sqlite
+*.sqlite3
+
+# ===================================
+# SECURITY
+# ===================================
+# JWT secrets
+*.pem
+*.key
+secrets/
+
+# Admin credentials
+admin-credentials.json
+master-admin.json
+
+# ===================================
+# CACHE
+# ===================================
+.cache/
+.eslintcache
+
+# ===================================
+# TESTING
+# ===================================
+coverage/
+.nyc_output/
+
+# ===================================
+# BUILD
+# ===================================
+build/
+dist/
+
+# ===================================
+# OS FILES
+# ===================================
+.DS_Store
+Thumbs.db
+*.stackdump
