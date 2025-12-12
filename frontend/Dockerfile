@@ -7,6 +7,10 @@ RUN npm install
 
 COPY . .
 
+# Build React app for production
+RUN npm run build
+
 EXPOSE 3000
 
-CMD ["npm", "start"]
+# Use our custom server to serve the build
+CMD ["node", "server.js"]
