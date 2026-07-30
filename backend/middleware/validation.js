@@ -209,9 +209,11 @@ export const validateAddress = [
     .isLength({ min: 1, max: 200 })
     .withMessage('Address must be between 1 and 200 characters'),
   body('phone')
-    .isMobilePhone()
+    .optional({ checkFalsy: true })
+    .isLength({ min: 1, max: 30 })
     .withMessage('Please provide a valid phone number'),
   body('age')
+    .optional({ checkFalsy: true })
     .isInt({ min: 1, max: 150 })
     .withMessage('Age must be between 1 and 150'),
   handleValidationErrors

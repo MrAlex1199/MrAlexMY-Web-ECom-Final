@@ -25,23 +25,25 @@ export default function ShippingLocations({ userData, userId }) {
         return;
       }
 
+      const addressPayload = {
+        userId,
+        firstName,
+        lastName,
+        city,
+        postalCode,
+        country,
+        address,
+        phone: phone || "",
+      };
+      if (age) addressPayload.age = Number(age);
+
       const response = await fetch("http://localhost:3001/api/users/save-address", {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({
-          userId,
-          firstName,
-          lastName,
-          city,
-          postalCode,
-          country,
-          address,
-          phone,
-          age,
-        }),
+        body: JSON.stringify(addressPayload),
       });
 
       if (response.ok) {
@@ -122,22 +124,24 @@ export default function ShippingLocations({ userData, userId }) {
         return;
       }
 
+      const editPayload = {
+        firstName: editFirstName,
+        lastName: editLastName,
+        city: editCity,
+        postalCode: editPostalCode,
+        country: editCountry,
+        address: editAddress,
+        phone: editPhone || "",
+      };
+      if (editAge) editPayload.age = Number(editAge);
+
       const response = await fetch(`http://localhost:3001/api/users/update-address/${userId}/${editingAddressId}`, {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({
-          firstName: editFirstName,
-          lastName: editLastName,
-          city: editCity,
-          postalCode: editPostalCode,
-          country: editCountry,
-          address: editAddress,
-          phone: editPhone,
-          age: editAge,
-        }),
+        body: JSON.stringify(editPayload),
       });
       if (response.ok) {
         alert("อัปเดตที่อยู่สำเร็จ");
