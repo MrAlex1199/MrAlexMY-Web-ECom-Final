@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../../components/AdminComponents/Sidebar";
 import Header from "../../components/AdminComponents/header";
-import { subscribeToUsers, notifyDataChange } from "../../utils/realtime";
-import { API_BASE_URL } from "../../config/api";
+import { subscribeRealtimeUsers, notifyDataChange } from "../../utils/realtime";
 import {
   Users, Shield, UserCheck, Search, ChevronDown, ChevronUp,
   Mail, Phone, Calendar, X
@@ -39,7 +38,7 @@ export default function AdminTeam({ adminData }) {
         const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
         const timestamp = new Date().getTime();
 
-        const response = await fetch(`${API_BASE_URL}/api/users/admins?_t=${timestamp}`, {
+        const response = await fetch(`http://localhost:3001/api/users/admins?_t=${timestamp}`, {
           headers: {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -80,7 +79,7 @@ export default function AdminTeam({ adminData }) {
 
   // Real-time updates for team members
   useEffect(() => {
-    const unsubscribe = subscribeToUsers((data, meta) => {
+    const unsubscribe = subscribeRealtimeUsers((data, meta) => {
       if (meta.isUpdate) {
         const teamData = data.admins || data || [];
         const currentCount = team.length;

@@ -1,36 +1,28 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "../config/api";
+import { FiUser, FiMapPin, FiMail, FiLock, FiAlertTriangle, FiX, FiEye, FiEyeOff } from "react-icons/fi";
 
 export default function Setting({ userData }) {
   const navigate = useNavigate();
   
-  // Password change states
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   
-  // Email change states
   const [newEmail, setNewEmail] = useState("");
   const [emailPassword, setEmailPassword] = useState("");
   const [showEmailForm, setShowEmailForm] = useState(false);
   
-  // Account deletion states
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
   const [deletePassword, setDeletePassword] = useState("");
-  
-  // Loading states
   const [isLoading, setIsLoading] = useState(false);
 
-  // Function to handle password change
   const handleChangePassword = async (e) => {
     e.preventDefault();
-    
     if (!currentPassword || !newPassword) {
       alert("กรุณากรอกรหัสผ่านปัจจุบันและรหัสผ่านใหม่");
       return;
     }
-
     if (newPassword.length < 8) {
       alert("รหัสผ่านใหม่ต้องมีอย่างน้อย 8 ตัวอักษร");
       return;
@@ -44,7 +36,7 @@ export default function Setting({ userData }) {
         return;
       }
 
-      const response = await fetch(`${API_BASE_URL}/api/auth/change-password`, {
+      const response = await fetch("http://localhost:3001/api/auth/change-password", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -54,7 +46,6 @@ export default function Setting({ userData }) {
       });
 
       const data = await response.json();
-      
       if (response.ok && data.success) {
         alert("เปลี่ยนรหัสผ่านสำเร็จ");
         setCurrentPassword("");
@@ -70,10 +61,8 @@ export default function Setting({ userData }) {
     }
   };
 
-  // Function to handle email change
   const handleChangeEmail = async (e) => {
     e.preventDefault();
-    
     if (!newEmail || !emailPassword) {
       alert("กรุณากรอกอีเมลใหม่และรหัสผ่านปัจจุบัน");
       return;
@@ -87,7 +76,7 @@ export default function Setting({ userData }) {
         return;
       }
 
-      const response = await fetch(`${API_BASE_URL}/api/auth/change-email`, {
+      const response = await fetch("http://localhost:3001/api/auth/change-email", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -97,13 +86,11 @@ export default function Setting({ userData }) {
       });
 
       const data = await response.json();
-      
       if (response.ok && data.success) {
         alert("เปลี่ยนอีเมลสำเร็จ");
         setNewEmail("");
         setEmailPassword("");
         setShowEmailForm(false);
-        // Refresh page to show new email
         window.location.reload();
       } else {
         alert(data.message || "เปลี่ยนอีเมลล้มเหลว");
@@ -116,7 +103,6 @@ export default function Setting({ userData }) {
     }
   };
 
-  // Function to handle password recovery
   const handleForgotPassword = async () => {
     if (!userData.email) {
       alert("ไม่พบข้อมูลอีเมล");
@@ -125,22 +111,17 @@ export default function Setting({ userData }) {
 
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/forgot-password`, {
+      const response = await fetch("http://localhost:3001/api/auth/forgot-password", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: userData.email }),
       });
 
       const data = await response.json();
-      
       if (response.ok) {
         alert(data.message);
-        // In development, show the reset token
         if (data.resetToken) {
-          console.log("Reset token (for development):", data.resetToken);
-          alert(`Reset token (for development): ${data.resetToken}`);
+          console.log("Reset token:", data.resetToken);
         }
       } else {
         alert(data.message || "เกิดข้อผิดพลาดในการส่งลิงก์รีเซ็ตรหัสผ่าน");
@@ -153,7 +134,6 @@ export default function Setting({ userData }) {
     }
   };
 
-  // Function to handle account deletion
   const handleDeleteAccount = async () => {
     if (!deletePassword) {
       alert("กรุณากรอกรหัสผ่านเพื่อยืนยันการลบบัญชี");
@@ -168,7 +148,7 @@ export default function Setting({ userData }) {
         return;
       }
 
-      const response = await fetch(`${API_BASE_URL}/api/auth/delete-account`, {
+      const response = await fetch("http://localhost:3001/api/auth/delete-account", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -178,10 +158,8 @@ export default function Setting({ userData }) {
       });
 
       const data = await response.json();
-
       if (response.ok && data.success) {
         alert("ลบบัญชีสำเร็จ");
-        // Clear local storage and redirect to home
         localStorage.removeItem("token");
         localStorage.removeItem("isAdmin");
         navigate("/");
@@ -199,273 +177,227 @@ export default function Setting({ userData }) {
   };
 
   return (
-    <div className="card rounded-lg shadow-md mt-5 mx-10 bg-white">
-      <div className="mx-4 min-h-screen max-w-screen-xl sm:mx-8 xl:mx-auto">
-        <h1 className="border-b py-6 text-4xl font-semibold">Settings</h1>
-        <div className="grid grid-cols-8 pt-3 sm:grid-cols-10">
-          <div className="col-span-2 hidden sm:block">
-            <ul className="flex flex-col space-y-2">
-              <div className="flex flex-col space-y-2">
-                <NavLink
-                  to="/SettingUser"
-                  className="mt-5 cursor-pointer border-l-2 border-l-blue-700 px-2 py-2 font-semibold text-blue-700 transition hover:border-l-blue-700 hover:text-blue-700"
-                >
-                  Accounts
-                </NavLink>
-                <NavLink
-                  to="/ShippingLocations"
-                  className="mt-5 cursor-pointer border-l-2 border-l-blue-700 px-2 py-2 font-semibold"
-                >
-                  Shipping Address
-                </NavLink>
-              </div>
-            </ul>
+    <div className="page-container py-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 className="text-3xl font-extrabold text-gray-900 pb-6 border-b border-gray-200">
+          Account Settings
+        </h1>
+
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pt-8">
+          {/* Settings Sidebar Nav */}
+          <div className="md:col-span-3 space-y-2">
+            <NavLink
+              to="/SettingUser"
+              className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm bg-brand-50 text-brand-600 border border-brand-200 shadow-sm"
+            >
+              <FiUser className="w-4 h-4" /> Account
+            </NavLink>
+            <NavLink
+              to="/ShippingLocations"
+              className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+            >
+              <FiMapPin className="w-4 h-4" /> Shipping Addresses
+            </NavLink>
           </div>
-          <div className="col-span-8 overflow-hidden rounded-xl sm:bg-gray-50 sm:px-8 sm:shadow">
-            <div className="pt-4">
-              <h1 className="py-2 text-2xl font-semibold">Account settings</h1>
-              <p className="font- text-slate-600">
-                Your can change Email and password or deleteAccount
-              </p>
+
+          {/* Main Form Content */}
+          <div className="md:col-span-9 bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 space-y-8">
+            <div>
+              <h2 className="text-xl font-bold text-gray-900">Profile & Security</h2>
+              <p className="text-xs text-gray-500 mt-1">Manage your email address, password, and account settings</p>
             </div>
-            <hr className="mt-4 mb-8" />
-            <p className="py-2 text-xl font-semibold">Email Address</p>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-gray-600">
-                Your email address is <strong>{userData.email}</strong>
-              </p>
-              <button 
-                onClick={() => setShowEmailForm(!showEmailForm)}
-                className="inline-flex text-sm font-semibold text-blue-600 underline decoration-2"
-              >
-                {showEmailForm ? "Cancel" : "Change"}
-              </button>
-            </div>
-            
-            {showEmailForm && (
-              <form onSubmit={handleChangeEmail} className="mt-4 p-4 border rounded-lg bg-gray-50">
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div>
-                    <label className="block text-sm text-gray-500">New Email Address</label>
-                    <input
-                      type="email"
-                      value={newEmail}
-                      onChange={(e) => setNewEmail(e.target.value)}
-                      className="w-full rounded-md border-2 border-gray-300 py-2 px-4 text-gray-700 focus:border-blue-600 focus:outline-none"
-                      placeholder="new@example.com"
-                      required
-                    />
+
+            {/* Email Section */}
+            <div className="pt-6 border-t border-gray-100">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                    <FiMail className="text-brand-500" /> Email Address
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Your active email is <strong>{userData.email}</strong>
+                  </p>
+                </div>
+                <button 
+                  onClick={() => setShowEmailForm(!showEmailForm)}
+                  className="btn-ghost text-xs !py-2 !px-4 text-brand-500 font-bold border border-gray-200 rounded-xl"
+                >
+                  {showEmailForm ? "Cancel" : "Change Email"}
+                </button>
+              </div>
+
+              {showEmailForm && (
+                <form onSubmit={handleChangeEmail} className="mt-4 p-5 rounded-2xl bg-gray-50 border border-gray-200 space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
+                        New Email Address
+                      </label>
+                      <input
+                        type="email"
+                        value={newEmail}
+                        onChange={(e) => setNewEmail(e.target.value)}
+                        className="input-field text-sm !py-2.5"
+                        placeholder="new@example.com"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
+                        Current Password
+                      </label>
+                      <input
+                        type="password"
+                        value={emailPassword}
+                        onChange={(e) => setEmailPassword(e.target.value)}
+                        className="input-field text-sm !py-2.5"
+                        placeholder="Enter current password"
+                        required
+                      />
+                    </div>
                   </div>
+                  <div className="flex justify-end gap-2 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowEmailForm(false)}
+                      className="btn-ghost text-xs !py-2"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isLoading}
+                      className="btn-primary text-xs !py-2 !px-5"
+                    >
+                      {isLoading ? "Saving..." : "Save Email"}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+
+            {/* Password Section */}
+            <div className="pt-6 border-t border-gray-100">
+              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-4">
+                <FiLock className="text-brand-500" /> Change Password
+              </h3>
+
+              <form onSubmit={handleChangePassword} className="space-y-4 max-w-lg">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm text-gray-500">Current Password</label>
+                    <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
+                      Current Password
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
+                        className="input-field text-sm !py-2.5 !pr-10"
+                        placeholder="••••••••"
+                      />
+                      <button
+                        type="button"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? <FiEyeOff className="w-4 h-4" /> : <FiEye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
+                      New Password
+                    </label>
                     <input
-                      type="password"
-                      value={emailPassword}
-                      onChange={(e) => setEmailPassword(e.target.value)}
-                      className="w-full rounded-md border-2 border-gray-300 py-2 px-4 text-gray-700 focus:border-blue-600 focus:outline-none"
-                      placeholder="Enter current password"
-                      required
+                      type={showPassword ? "text" : "password"}
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="input-field text-sm !py-2.5"
+                      placeholder="••••••••"
                     />
                   </div>
                 </div>
-                <div className="mt-4 flex justify-end space-x-2">
+
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
                   <button
                     type="button"
-                    onClick={() => {
-                      setShowEmailForm(false);
-                      setNewEmail("");
-                      setEmailPassword("");
-                    }}
-                    className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-100"
+                    onClick={handleForgotPassword}
+                    disabled={isLoading}
+                    className="text-xs text-brand-500 font-semibold hover:underline"
                   >
-                    Cancel
+                    Forgot password? Recover account
                   </button>
+
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                    className="btn-primary text-xs !py-2.5 !px-6 w-full sm:w-auto"
                   >
-                    {isLoading ? "Saving..." : "Save Email"}
+                    {isLoading ? "Saving..." : "Save Password"}
                   </button>
                 </div>
               </form>
-            )}
-            <hr className="mt-4 mb-8" />
-            <form onSubmit={(e) => handleChangePassword(e)}>
-              <p className="py-2 text-xl font-semibold">Password</p>
-              <div className="flex items-center">
-                <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-3">
-                  <label for="login-password">
-                    <span className="text-sm text-gray-500">
-                      Current Password
-                    </span>
-                    <div className="relative flex overflow-hidden rounded-md border-2 transition focus-within:border-blue-600">
-                      <input
-                        type={showPassword ? "text" : "password"}
-                        onChange={(e) => {
-                          setCurrentPassword(e.target.value);
-                        }}
-                        id="Current-password"
-                        className="w-full flex-shrink appearance-none border-gray-300 bg-white py-2 px-4 text-base text-gray-700 placeholder-gray-400 focus:outline-none"
-                        placeholder="***********"
-                      />
-                    </div>
-                  </label>
-                  <label for="login-password">
-                    <span className="text-sm text-gray-500">New Password</span>
-                    <div className="relative flex overflow-hidden rounded-md border-2 transition focus-within:border-blue-600">
-                      <input
-                        type={showPassword ? "text" : "password"}
-                        onChange={(e) => {
-                          setNewPassword(e.target.value);
-                        }}
-                        id="New-password"
-                        className="w-full flex-shrink appearance-none border-gray-300 bg-white py-2 px-4 text-base text-gray-700 placeholder-gray-400 focus:outline-none"
-                        placeholder="***********"
-                      />
-                    </div>
-                  </label>
+            </div>
+
+            {/* Danger Zone */}
+            <div className="pt-6 border-t border-rose-100">
+              <div className="p-6 rounded-2xl bg-rose-50/50 border border-rose-100 space-y-3">
+                <div className="flex items-center gap-2 text-rose-600 font-bold text-sm">
+                  <FiAlertTriangle className="w-5 h-5" /> Delete Account
                 </div>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="mt-5 ml-2 h-6 w-6 cursor-pointer text-sm font-semibold text-gray-600 underline decoration-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
-                  />
-                </svg>
-              </div>
-              <p className="mt-2">
-                Can't remember your current password.{" "}
+                <p className="text-xs text-gray-600 leading-relaxed">
+                  Once deleted, your account data will be permanently wiped. This action cannot be undone.
+                </p>
                 <button
                   type="button"
-                  onClick={handleForgotPassword}
-                  disabled={isLoading}
-                  className="text-sm font-semibold text-blue-600 underline decoration-2 disabled:opacity-50"
+                  onClick={() => setShowConfirmPopup(true)}
+                  className="text-xs font-bold text-rose-600 hover:text-rose-700 underline"
                 >
-                  {isLoading ? "Sending..." : "Recover Account"}
+                  Proceed with account deletion
                 </button>
-              </p>
-              <button 
-                type="submit"
-                disabled={isLoading}
-                className="mt-4 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
-              >
-                {isLoading ? "Saving..." : "Save Password"}
-              </button>
-            </form>
+              </div>
 
-            <hr className="mt-4 mb-8" />
-
-            <div className="mb-10">
-              <p className="py-2 text-xl font-semibold">Delete Account</p>
-              <p className="inline-flex items-center rounded-full bg-rose-100 px-4 py-1 text-rose-600">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="mr-2 h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                Proceed with caution
-              </p>
-              <p className="mt-2">
-                Make sure you have taken backup of your account in case you ever
-                need to get access to your data. We will completely wipe your
-                data. There is no way to access your account after this action.
-              </p>
-              <button
-                className="ml-auto text-sm font-semibold text-rose-600 underline decoration-2"
-                onClick={() => setShowConfirmPopup(true)}
-              >
-                Continue with deletion
-              </button>
-
+              {/* Confirm deletion modal */}
               {showConfirmPopup && (
-                <div
-                  id="popup-modal"
-                  className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50"
-                >
-                  <div className="relative p-4 w-full max-w-md max-h-full">
-                    <div className="relative bg-white rounded-lg shadow dark:bg-gray-800">
-                      <button
-                        type="button"
-                        className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                        onClick={() => setShowConfirmPopup(false)}
-                      >
-                        <svg
-                          className="w-3 h-3"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 14 14"
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
+                  <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+                    <button
+                      onClick={() => setShowConfirmPopup(false)}
+                      className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+                    >
+                      <FiX className="w-5 h-5" />
+                    </button>
+                    <div className="text-center">
+                      <FiAlertTriangle className="w-12 h-12 text-rose-500 mx-auto mb-3" />
+                      <h3 className="text-lg font-bold text-gray-900 mb-2">
+                        คุณแน่ใจหรือไม่ที่จะลบบัญชีของคุณ?
+                      </h3>
+                      <p className="text-xs text-gray-500 mb-4">
+                        กรอกรหัสผ่านของคุณด้านล่างเพื่อยืนยันการลบบัญชี
+                      </p>
+                      <input
+                        type="password"
+                        value={deletePassword}
+                        onChange={(e) => setDeletePassword(e.target.value)}
+                        className="input-field text-sm !py-2.5 mb-4"
+                        placeholder="Enter your password"
+                        required
+                      />
+                      <div className="flex gap-3">
+                        <button
+                          onClick={() => setShowConfirmPopup(false)}
+                          className="btn-ghost flex-1 text-xs !py-2.5"
                         >
-                          <path
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                          />
-                        </svg>
-                        <span className="sr-only">Close modal</span>
-                      </button>
-                      <div className="p-4 md:p-5 text-center">
-                        <svg
-                          className="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                          />
-                        </svg>
-                        <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                          คุณแน่ใจหรือไม่ที่จะลบบัญชีของคุณ?
-                        </h3>
-                        <div className="mb-4">
-                          <label className="block text-sm text-gray-500 mb-2">
-                            กรอกรหัสผ่านเพื่อยืนยัน
-                          </label>
-                          <input
-                            type="password"
-                            value={deletePassword}
-                            onChange={(e) => setDeletePassword(e.target.value)}
-                            className="w-full rounded-md border-2 border-gray-300 py-2 px-4 text-gray-700 focus:border-red-600 focus:outline-none"
-                            placeholder="Enter your password"
-                            required
-                          />
-                        </div>
+                          Cancel
+                        </button>
                         <button
                           onClick={handleDeleteAccount}
                           disabled={isLoading || !deletePassword}
-                          className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center disabled:opacity-50"
+                          className="bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs py-2.5 px-4 rounded-xl flex-1 transition-colors disabled:opacity-50"
                         >
-                          {isLoading ? "Deleting..." : "Yes, Delete Account"}
-                        </button>
-                        <button
-                          onClick={() => setShowConfirmPopup(false)}
-                          className="py-2.5 px-5 ml-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                        >
-                          No, cancel
+                          {isLoading ? "Deleting..." : "Delete Account"}
                         </button>
                       </div>
                     </div>

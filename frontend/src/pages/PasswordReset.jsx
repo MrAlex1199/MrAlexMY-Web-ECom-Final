@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "../config/api";
+import { useSearchParams, useNavigate, Link } from "react-router-dom";
+import logo from "../components/logo/weblogo.jpg";
+import { FiLock, FiEye, FiEyeOff, FiKey } from "react-icons/fi";
 
 export default function PasswordReset() {
   const [searchParams] = useSearchParams();
@@ -43,11 +44,9 @@ export default function PasswordReset() {
 
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
+      const response = await fetch("http://localhost:3001/api/auth/reset-password", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, newPassword }),
       });
 
@@ -68,113 +67,95 @@ export default function PasswordReset() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            รีเซ็ตรหัสผ่าน
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            กรุณากรอกรหัสผ่านใหม่ของคุณ
+    <div className="page-container flex items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-gray-100 p-8 sm:p-10 animate-fade-in-up">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <Link to="/" className="inline-flex items-center gap-3 group mb-3">
+            <img className="h-10 w-auto rounded-xl shadow-sm" src={logo} alt="SongTor Hub" />
+            <span className="text-xl font-bold text-gray-900 group-hover:text-brand-500 transition-colors">
+              SongTor Hub
+            </span>
+          </Link>
+          <h1 className="text-2xl font-bold text-gray-900 mt-2">
+            Reset Password
+          </h1>
+          <p className="text-xs text-gray-500 mt-1">
+            Enter your reset token and new password
           </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleResetPassword}>
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="token" className="block text-sm font-medium text-gray-700">
-                Reset Token
-              </label>
+
+        <form className="space-y-4" onSubmit={handleResetPassword}>
+          <div>
+            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
+              Reset Token
+            </label>
+            <div className="relative">
+              <FiKey className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
-                id="token"
-                name="token"
                 type="text"
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className="input-field text-sm !pl-10 !py-2.5"
                 placeholder="Enter reset token"
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="new-password" className="block text-sm font-medium text-gray-700">
-                รหัสผ่านใหม่
-              </label>
-              <div className="mt-1 relative">
-                <input
-                  id="new-password"
-                  name="new-password"
-                  type={showPassword ? "text" : "password"}
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                  placeholder="Enter new password"
-                  required
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  <svg
-                    className="h-5 w-5 text-gray-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    {showPassword ? (
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
-                      />
-                    ) : (
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    )}
-                  </svg>
-                </button>
-              </div>
-            </div>
-            <div>
-              <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700">
-                ยืนยันรหัสผ่านใหม่
-              </label>
-              <input
-                id="confirm-password"
-                name="confirm-password"
-                type={showPassword ? "text" : "password"}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Confirm new password"
                 required
               />
             </div>
           </div>
 
           <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
-            >
-              {isLoading ? "กำลังรีเซ็ต..." : "รีเซ็ตรหัสผ่าน"}
-            </button>
+            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
+              New Password
+            </label>
+            <div className="relative">
+              <FiLock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <input
+                type={showPassword ? "text" : "password"}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="input-field text-sm !pl-10 !pr-10 !py-2.5"
+                placeholder="At least 8 characters"
+                required
+              />
+              <button
+                type="button"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FiEyeOff className="w-4 h-4" /> : <FiEye className="w-4 h-4" />}
+              </button>
+            </div>
           </div>
 
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={() => navigate("/login")}
-              className="text-blue-600 hover:text-blue-500 text-sm"
-            >
-              กลับไปหน้าเข้าสู่ระบบ
-            </button>
+          <div>
+            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
+              Confirm New Password
+            </label>
+            <div className="relative">
+              <FiLock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <input
+                type={showPassword ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="input-field text-sm !pl-10 !py-2.5"
+                placeholder="Repeat new password"
+                required
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="btn-primary w-full !py-3 text-sm font-semibold mt-2 shadow-lg shadow-brand-500/20"
+          >
+            {isLoading ? "Resetting..." : "Reset Password"}
+          </button>
+
+          <div className="text-center pt-4 border-t border-gray-100 mt-6">
+            <Link to="/login" className="text-xs font-bold text-brand-500 hover:text-brand-600 transition-colors">
+              ← Back to Sign In
+            </Link>
           </div>
         </form>
       </div>

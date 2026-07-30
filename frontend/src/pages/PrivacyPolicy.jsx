@@ -1,96 +1,83 @@
 import React from "react";
+import bg2 from "../components/bg/bg2.jpg";
+import { FiShield } from "react-icons/fi";
 
 export default function PrivacyPolicy() {
-return (
-    <div>
-        <div className="bg-center bg-[url('../components/bg/bg2.jpg')] bg-gray-700 bg-blend-multiply">
-            <div className="px-4 mx-auto max-w-screen-2xl text-center py-24 lg:py-56">
-                <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-white md:text-5xl lg:text-6xl">
-                    Built for the Mission. Ready for Anything.
-                </h1>
-                <p className="mb-8 text-lg font-normal text-gray-300 lg:text-xl sm:px-16 lg:px-48">
-                    With a focus on durability, functionality, and performance, our
-                    military clothing and equipment is designed to meet the demanding
-                    needs of today's warfighter.
-                </p>
-            </div>
+  return (
+    <div className="page-container pb-16">
+      {/* Hero */}
+      <div className="relative overflow-hidden bg-gray-900 py-16 sm:py-24">
+        <img src={bg2} alt="Privacy Policy" className="absolute inset-0 w-full h-full object-cover object-center opacity-30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-600/80 to-accent-600/80" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-white mx-auto mb-4">
+            <FiShield className="w-6 h-6" />
+          </div>
+          <h1 className="text-3xl font-extrabold text-white sm:text-5xl drop-shadow-md">
+            Privacy Policy
+          </h1>
+          <p className="mt-2 text-base text-white/90 max-w-xl mx-auto drop-shadow">
+            SongTor Hub — Your privacy and data security are our top priorities
+          </p>
         </div>
-        <div className="card rounded-lg shadow-md mt-5 mx-10 bg-white">
-            <div className="px-4 mx-auto max-w-screen-lg py-8">
-                <h2 className="text-3xl font-bold mb-6 text-gray-800">Privacy Policy</h2>
-                <p className="mb-6 text-gray-600">
-                    Your privacy is important to us. This privacy statement explains the
-                    personal data our website processes, how our website processes it,
-                    and for what purposes.
-                </p>
-                <h3 className="text-2xl font-semibold mb-4 text-gray-800">Information We Collect</h3>
-                <p className="mb-6 text-gray-600">
-                    We collect information to provide better services to all our users.
-                    We collect information in the following ways:
-                </p>
-                <ul className="list-disc list-inside mb-6 text-gray-600">
-                    <li className="mb-2">
-                        Information you give us. For example, our website requires you to
-                        sign up for an account. When you do, we’ll ask for personal
-                        information, like your name, email address, and telephone number.
-                    </li>
-                    <li>
-                        Information we get from your use of our services. We collect
-                        information about the services that you use and how you use them,
-                        like when you visit a website that uses our advertising services
-                        or you view and interact with our ads and content.
-                    </li>
-                </ul>
-                <h3 className="text-2xl font-semibold mb-4 text-gray-800">
-                    How We Use Information We Collect
-                </h3>
-                <p className="mb-6 text-gray-600">
-                    We use the information we collect from all our services to provide,
-                    maintain, protect and improve them, to develop new ones, and to
-                    protect our website and our users.
-                </p>
-                <h3 className="text-2xl font-semibold mb-4 text-gray-800">Information We Share</h3>
-                <p className="mb-6 text-gray-600">
-                    We do not share personal information with companies, organizations,
-                    and individuals outside of our website unless one of the following
-                    circumstances applies:
-                </p>
-                <ul className="list-disc list-inside mb-6 text-gray-600">
-                    <li className="mb-2">
-                        With your consent. We will share personal information with
-                        companies, organizations, or individuals outside of our website
-                        when we have your consent to do so.
-                    </li>
-                    <li>
-                        For legal reasons. We will share personal information with
-                        companies, organizations, or individuals outside of our website if
-                        we have a good-faith belief that access, use, preservation, or
-                        disclosure of the information is reasonably necessary to meet any
-                        applicable law, regulation, legal process, or enforceable
-                        governmental request.
-                    </li>
-                </ul>
-                <h3 className="text-2xl font-semibold mb-4 text-gray-800">
-                    Security of Your Information
-                </h3>
-                <p className="mb-6 text-gray-600">
-                    We work hard to protect our website and our users from unauthorized
-                    access to or unauthorized alteration, disclosure, or destruction of
-                    information we hold.
-                </p>
-                <h3 className="text-2xl font-semibold mb-4 text-gray-800">
-                    Changes to This Privacy Policy
-                </h3>
-                <p className="mb-6 text-gray-600">
-                    Our Privacy Policy may change from time to time. We will not reduce
-                    your rights under this Privacy Policy without your explicit consent.
-                    We will post any privacy policy changes on this page and, if the
-                    changes are significant, we will provide a more prominent notice
-                    (including, for certain services, email notification of privacy
-                    policy changes).
-                </p>
-            </div>
+      </div>
+
+      {/* Content */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-10">
+        <div className="bg-white rounded-3xl p-8 sm:p-12 shadow-md border border-gray-100 space-y-8 text-gray-700 leading-relaxed">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 mb-3">Overview</h2>
+            <p className="text-sm">
+              At SongTor Hub, your privacy is important to us. This privacy policy statement explains the personal data our website processes, how we process it, and for what purposes.
+            </p>
+          </div>
+
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 mb-3">Information We Collect</h2>
+            <p className="text-sm mb-3">
+              We collect information to provide better services to all our users. We collect information in the following ways:
+            </p>
+            <ul className="list-disc list-inside space-y-2 text-sm text-gray-600 pl-2">
+              <li>
+                <strong>Information you provide:</strong> When signing up for an account, we ask for personal details like your full name, email address, shipping address, and phone number.
+              </li>
+              <li>
+                <strong>Usage information:</strong> We collect data regarding the services you use, order history, and how you interact with our marketplace.
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 mb-3">How We Use Information</h2>
+            <p className="text-sm text-gray-600">
+              We use collected information to maintain and improve our marketplace, process purchases, deliver items securely, and notify users about order status updates.
+            </p>
+          </div>
+
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 mb-3">Information Sharing</h2>
+            <p className="text-sm text-gray-600 mb-3">
+              We do not share personal information with outside companies or third parties except in the following circumstances:
+            </p>
+            <ul className="list-disc list-inside space-y-2 text-sm text-gray-600 pl-2">
+              <li>With your explicit consent.</li>
+              <li>For order fulfillment with verified logistics and delivery partners.</li>
+              <li>For legal reasons if required by applicable regulations or governmental request.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 mb-3">Data Security</h2>
+            <p className="text-sm text-gray-600">
+              We employ encryption and secure authentication protocols to protect user data from unauthorized access, alteration, or disclosure.
+            </p>
+          </div>
+
+          <div className="pt-6 border-t border-gray-100 text-xs text-gray-400">
+            Last updated: July 2026. SongTor Hub reserves the right to update this policy periodically.
+          </div>
         </div>
+      </div>
     </div>
-);
+  );
 }

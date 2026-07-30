@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
-import { API_BASE_URL } from "../config/api";
+import { NavLink, Link } from "react-router-dom";
+import { FiPackage, FiTruck, FiCheckCircle, FiXCircle, FiRotateCcw, FiClock } from "react-icons/fi";
 
 export default function Orderstatus({ userId }) {
   const [filter, setFilter] = useState("In Transit");
@@ -23,7 +23,7 @@ export default function Orderstatus({ userId }) {
           return;
         }
 
-        const response = await fetch(`${API_BASE_URL}/api/orders/${userId}`, {
+        const response = await fetch(`http://localhost:3001/api/orders/${userId}`, {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${token}`,
@@ -68,68 +68,61 @@ export default function Orderstatus({ userId }) {
       return `${addr.address}, ${addr.city}, ${addr.postalCode}, ${addr.country}`;
   }
 
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case "Shipped":
+        return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700"><FiCheckCircle /> Shipped</span>;
+      case "In Transit":
+        return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700"><FiTruck /> In Transit</span>;
+      case "Returned":
+        return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700"><FiRotateCcw /> Returned</span>;
+      default:
+        return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-700"><FiXCircle /> {status}</span>;
+    }
+  };
+
+  const filterTabs = [
+    { label: "In Transit", icon: FiTruck },
+    { label: "Shipped", icon: FiCheckCircle },
+    { label: "Cancelled", icon: FiXCircle },
+    { label: "Returned", icon: FiRotateCcw },
+    { label: "All", icon: FiPackage }
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto text-center mb-12 px-4">
-        <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+    <div className="page-container py-10">
+      {/* Header */}
+      <div className="max-w-4xl mx-auto text-center mb-8 px-4">
+        <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
           Order Status
         </h1>
-        <p className="mt-2 text-lg text-gray-600">
+        <p className="mt-2 text-base text-gray-500">
           Track your orders in real-time
         </p>
       </div>
 
-      <div className="max-w-4xl mx-auto mb-8 flex flex-wrap justify-center gap-4 px-4">
-        <button
-          onClick={() => setFilter("In Transit")}
-          className={`px-5 py-2.5 rounded-lg transition duration-200 ${
-            filter === "In Transit"
-              ? "bg-indigo-600 text-white"
-              : "bg-white text-gray-900 hover:bg-gray-100 shadow-sm"
-          }`}
-        >
-          In Transit
-        </button>
-        <button
-          onClick={() => setFilter("Shipped")}
-          className={`px-5 py-2.5 rounded-lg transition duration-200 ${
-            filter === "Shipped"
-              ? "bg-indigo-600 text-white"
-              : "bg-white text-gray-900 hover:bg-gray-100 shadow-sm"
-          }`}
-        >
-          Shipped
-        </button>
-        <button
-          onClick={() => setFilter("Cancelled")}
-          className={`px-5 py-2.5 rounded-lg transition duration-200 ${
-            filter === "Cancelled"
-              ? "bg-indigo-600 text-white"
-              : "bg-white text-gray-900 hover:bg-gray-100 shadow-sm"
-          }`}
-        >
-          Cancelled
-        </button>
-        <button
-          onClick={() => setFilter("Returned")}
-          className={`px-5 py-2.5 rounded-lg transition duration-200 ${
-            filter === "Returned"
-              ? "bg-indigo-600 text-white"
-              : "bg-white text-gray-900 hover:bg-gray-100 shadow-sm"
-          }`}
-        >
-          Returned
-        </button>
-        <button
-          onClick={() => setFilter("All")}
-          className={`px-5 py-2.5 rounded-lg transition duration-200 ${
-            filter === "All"
-              ? "bg-indigo-600 text-white"
-              : "bg-white text-gray-900 hover:bg-gray-100 shadow-sm"
-          }`}
-        >
-          All Orders
-        </button>
+      {/* Status Filter Tabs */}
+      <div className="max-w-4xl mx-auto mb-10 px-4">
+        <div className="flex flex-wrap justify-center gap-2 p-1.5 bg-gray-200/60 backdrop-blur-sm rounded-2xl max-w-fit mx-auto">
+          {filterTabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = filter === (tab.label === "All" ? "All" : tab.label);
+            return (
+              <button
+                key={tab.label}
+                onClick={() => setFilter(tab.label === "All" ? "All" : tab.label)}
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 ${
+                  isActive
+                    ? "bg-white text-brand-600 shadow-sm"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {loading ? (
@@ -137,104 +130,100 @@ export default function Orderstatus({ userId }) {
           <div className="loader"></div>
         </div>
       ) : (
-        <div className="max-w-4xl mx-auto space-y-6">
-          {filteredOrders.length > 0 ? filteredOrders.map((order) => (
-            <div
-              key={order._id}
-              className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-300"
-            >
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                <div className="flex items-center gap-3">
-                  <h2 className="text-xl font-bold text-gray-900">
-                    Order {order.orderId}
-                  </h2>
-                  <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium capitalize whitespace-nowrap ${
-                      order.status === "Shipped"
-                        ? "bg-green-200 text-green-700"
-                        : order.status === "In Transit"
-                        ? "bg-yellow-100 text-yellow-700"
-                        : "bg-red-200 text-red-700"
-                    }`}
-                  >
-                    {order.status}
-                  </span>
-                </div>
-                <div className="text-sm text-gray-600 text-left sm:text-right">
-                  <p>Ordered: {new Date(order.createdAt).toLocaleDateString()}</p>
-                  <p>Est. Delivery: {new Date(order.estDelivery).toLocaleDateString()}</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <div className="bg-gray-50 rounded-lg p-4 space-y-4">
-                  <div>
-                    <p className="text-sm text-gray-500 font-medium">Shipping To</p>
-                    <p className="text-gray-800 text-sm">{formatAddress(order.shippingAddress)}</p>
+        <div className="max-w-4xl mx-auto space-y-6 px-4">
+          {filteredOrders.length > 0 ? (
+            filteredOrders.map((order) => (
+              <div
+                key={order._id}
+                className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-300"
+              >
+                {/* Header */}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-gray-100">
+                  <div className="flex items-center gap-3">
+                    <h2 className="text-lg font-bold text-gray-900">
+                      Order #{order.orderId}
+                    </h2>
+                    {getStatusBadge(order.status)}
                   </div>
-                  <div>
-                    <p className="text-sm text-gray-500 font-medium">Payment</p>
-                    <p className="text-gray-800 text-sm capitalize">{order.payment}</p>
+                  <div className="text-xs text-gray-500 flex items-center gap-4">
+                    <span className="flex items-center gap-1"><FiClock /> {new Date(order.createdAt).toLocaleDateString()}</span>
+                    <span>Est. Delivery: {new Date(order.estDelivery).toLocaleDateString()}</span>
                   </div>
                 </div>
 
-                <div className="bg-gray-50 rounded-lg p-4 md:col-span-2">
-                  <p className="text-sm text-gray-500 font-medium mb-2">Items</p>
-                  <div className="space-y-3 max-h-40 overflow-y-auto pr-2">
-                    {order.productSelected.map((item, index) => (
-                      <div key={index} className="flex justify-between items-start">
-                        <div>
-                          <p className="text-gray-800">{item.name}</p>
-                          <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
-                        </div>
-                        <span className="text-gray-800 font-medium">
-                          ${(item.price * item.quantity).toFixed(2)}
-                        </span>
+                {/* Details Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-5">
+                  <div className="bg-gray-50/80 rounded-xl p-4 space-y-3 border border-gray-100">
+                    <div>
+                      <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Shipping To</p>
+                      <p className="text-gray-800 text-sm font-medium mt-0.5">{formatAddress(order.shippingAddress)}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Payment Method</p>
+                      <p className="text-gray-800 text-sm font-medium capitalize mt-0.5">{order.payment}</p>
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-50/80 rounded-xl p-4 md:col-span-2 border border-gray-100 flex flex-col justify-between">
+                    <div>
+                      <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-2">Purchased Items</p>
+                      <div className="space-y-2 max-h-36 overflow-y-auto pr-1">
+                        {order.productSelected.map((item, index) => (
+                          <div key={index} className="flex justify-between items-center text-sm">
+                            <span className="text-gray-800 font-medium truncate max-w-[200px]">{item.name}</span>
+                            <span className="text-xs text-gray-500">Qty: {item.quantity}</span>
+                            <span className="text-gray-900 font-bold">${(item.price * item.quantity).toFixed(2)}</span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                  <div className="mt-3 pt-3 border-t border-gray-100 flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Delivery Fee: ${order.deliveryPrice.toFixed(2)}</span>
-                    <span className="text-lg font-semibold text-gray-900">Total: ${order.totalPrice.toFixed(2)}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-gray-50 rounded-lg p-4 mb-6">
-                <div className="flex flex-col sm:flex-row justify-between gap-4">
-                  <div>
-                    <p className="text-sm text-gray-500">Tracking Code</p>
-                    <p className="text-gray-800 font-medium">{order.trackingCode}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Carrier</p>
-                    <p className="text-gray-800 font-medium">{order.carrier}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Last Update</p>
-                    <p className="text-gray-800 font-medium">{order.lastLocation}</p>
+                    </div>
+                    <div className="mt-4 pt-3 border-t border-gray-200/60 flex justify-between items-center text-sm">
+                      <span className="text-gray-500">Delivery: ${order.deliveryPrice.toFixed(2)}</span>
+                      <span className="text-base font-bold text-gray-900">Total: ${order.totalPrice.toFixed(2)}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="flex flex-col sm:flex-row gap-3">
-                  <NavLink
-                    to="/Products"
-                    className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition duration-200 text-center text-sm font-medium"
-                  >
-                    Buy Again
-                  </NavLink>
-                  <NavLink
-                    to="/contact"
-                    className="flex-1 bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-50 transition duration-200 text-center text-sm font-medium"
-                  >
-                    Contact Support
-                  </NavLink>
+                {/* Tracking section */}
+                <div className="bg-brand-50/40 rounded-xl p-4 border border-brand-100 mb-5 text-xs sm:text-sm">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                      <span className="text-gray-400 block text-xs">Tracking Code</span>
+                      <span className="font-semibold text-gray-800">{order.trackingCode || "N/A"}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-400 block text-xs">Carrier</span>
+                      <span className="font-semibold text-gray-800">{order.carrier || "Standard"}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-400 block text-xs">Last Update Location</span>
+                      <span className="font-semibold text-gray-800">{order.lastLocation || "In transit"}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex flex-col sm:flex-row gap-3">
+                    <NavLink
+                      to="/products"
+                      className="btn-primary text-center text-sm !py-2.5 flex-1"
+                    >
+                      Buy Again
+                    </NavLink>
+                    <NavLink
+                      to="/contact"
+                      className="btn-ghost border border-gray-200 text-center text-sm !py-2.5 flex-1"
+                    >
+                      Contact Support
+                    </NavLink>
+                </div>
               </div>
-            </div>
-          )) : (
-            <div className="text-center py-10 bg-white rounded-lg shadow-sm">
-                <p className="text-gray-500">No orders found for this category.</p>
+            ))
+          ) : (
+            <div className="text-center py-16 bg-white rounded-2xl shadow-sm border border-gray-100">
+                <FiPackage className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                <p className="text-gray-600 font-medium">No orders found in this status category.</p>
+                <Link to="/products" className="btn-primary text-sm mt-4 inline-block">Start Shopping</Link>
             </div>
           )}
         </div>

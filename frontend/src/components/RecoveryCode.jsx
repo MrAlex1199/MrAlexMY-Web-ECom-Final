@@ -3,7 +3,6 @@ import { StarIcon } from "@heroicons/react/20/solid";
 import { RadioGroup } from "@headlessui/react";
 import { useParams, useLocation } from "react-router-dom";
 import { X } from "lucide-react";
-import { API_BASE_URL } from "../config/api";
 
 // Move static data outside component to prevent recreation on each render
 const commentsData = [
@@ -321,8 +320,8 @@ export default function ProductsDetails({ userId }) {
   // Memoize the API endpoint to prevent recalculation
   const apiEndpoint = useMemo(() => {
     return type === "new-products"
-      ? `${API_BASE_URL}/api/new-products/${id}`
-      : `${API_BASE_URL}/api/products/${id}`;
+      ? `http://localhost:3001/api/new-products/${id}`
+      : `http://localhost:3001/api/products/${id}`;
   }, [id, type]);
 
   useEffect(() => {
@@ -369,7 +368,7 @@ export default function ProductsDetails({ userId }) {
         : originalPrice;
 
       const response = await fetch(
-        `${API_BASE_URL}/save-selected-products`,
+        "http://localhost:3001/save-selected-products",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

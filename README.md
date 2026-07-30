@@ -1,37 +1,73 @@
-# Project-MY-Web-Ecommerce
+# Project MY Web E-Commerce
 
-## How to run this project
+ระบบร้านค้าออนไลน์ E-Commerce พัฒนาด้วย React (Frontend) และ Node.js / Express (Backend) พร้อมระบบจัดเก็บข้อมูลด้วย MongoDB
 
-1.Clone project to your local environment 
- 1.1 Setup your mongodb database on your local environment or online mongodb
- 1.2 And plece in to .ENV file 
+---
 
-### Run gitclone link
+## 🚀 วิธีการติดตั้งและรันโปรเจกต์ (Getting Started)
 
-2.Split terminal cd to frontend and backend folder
+### 1. ตั้งค่าฐานข้อมูลและ Environment
+1. Setup MongoDB ใน Local หรือ MongoDB Atlas
+2. สร้างและตั้งค่าไฟล์ `.env` ในโฟลเดอร์ `backend/`
 
-### Run `cd frontend and cd backend`
+### 2. ติดตั้ง Dependencies
+เปิด Terminal แยก 2 หน้าต่างสำหรับ `frontend` และ `backend`:
+```bash
+# ในโฟลเดอร์ frontend
+cd frontend
+npm install
 
-3.install all dependencies required by run 
+# ในโฟลเดอร์ backend
+cd backend
+npm install
+```
 
-### Run `npm install` in both terminal
+### 3. รันโปรเจกต์
+```bash
+# ในโฟลเดอร์ frontend
+npm start
 
-4.Start the project in the frontend and backend terminal by run
+# ในโฟลเดอร์ backend
+npm start
+```
 
-### `npm start` in in both terminal
+### 4. การเข้าใช้งานผู้ดูแลระบบ (Admin Setup)
+1. ตั้งค่า `EMPLOYEE_ID` ในไฟล์ `.env` ของ Backend ก่อนทำรายการสมัคร
+2. ไปที่หน้า `/AdminRegister` เพื่อลงทะเบียนผู้ดูแลระบบ
+3. ไปที่หน้า `/AdminProducts` เพื่ออัปโหลดข้อมูลสินค้า (`ProductData.csv` และ `HomeProduct.csv`)
 
-5.Go to /AdminRegister For Register but need to edit EMPLOYEE_ID in .env file in server side before Register
+---
 
-6.Go to /AdminProducts to upload ProductData.csv file and HomeProduct.csv file
+## 🐳 การรันด้วย Docker (Docker Deployment)
 
-All Done
+1. ติดตั้ง Docker และ Docker Compose บนเครื่องเซิร์ฟเวอร์
+2. รันคำสั่งด้วยไฟล์ `docker-compose.deploy.yml`:
+```bash
+docker-compose -f docker-compose.deploy.yml up -d
+```
 
-To run your application on another computer with docker, follow these steps:
-1. Install Docker and Docker Compose on the new machine.
-2. Copy the `docker-compose.deploy.yml` file to the new machine.
-3. Open a terminal or command prompt in the directory where you copied the file.
-4. Run the following command: " docker-compose -f docker-compose.deploy.yml up -d "
+---
 
+## 📚 เอกสารประกอบโปรเจกต์ (Documentation)
 
+เอกสารรายละเอียดระบบ คู่มือการใช้งาน และประวัติการแก้ไขปัญหาสามารถดูได้จากไดเรกทอรี `docs/`:
 
-#MrAlexMY-Web-ECom-Final
+### 📖 คู่มือการใช้งาน (Guides)
+- 🛠️ [Git Setup Guide](docs/guides/GIT_SETUP_GUIDE.md) - คู่มือการใช้งานและตั้งค่า Git
+- 📦 [Stock Validation Guide](docs/guides/STOCK_VALIDATION_GUIDE.md) - คู่มือระบบตรวจสอบและจัดการสต็อกสินค้า
+- 👤 [User Account Management Guide](docs/guides/USER_ACCOUNT_MANAGEMENT_GUIDE.md) - คู่มือการจัดการบัญชีผู้ใช้งาน
+
+### 🛡️ ความปลอดภัยและการปรับปรุง (Security & Improvements)
+- 🔒 [Security Policy](SECURITY.md) - นโยบายและความปลอดภัยของระบบ
+- 📈 [System Improvements](docs/IMPROVEMENTS.md) - รายการปรับปรุงและฟีเจอร์ที่พัฒนาเพิ่มเติม
+
+### 🔧 ประวัติการแก้ไขระบบและเสถียรภาพ (System Fixes & Logs)
+- 🔐 [Admin 403 Forbidden Fix](docs/fixes/ADMIN_403_FORBIDDEN_FIX.md)
+- 🔑 [Admin Master ID System](docs/fixes/ADMIN_MASTER_ID_SYSTEM.md)
+- ⏱️ [Admin Rate Limiting Fix](docs/fixes/ADMIN_RATE_LIMITING_FINAL_FIX.md)
+- 🔄 [Admin Session Persistence & Stability](docs/fixes/ADMIN_SESSION_PERSISTENCE_FIX.md)
+- 🛠️ [Admin System Complete Fix](docs/fixes/ADMIN_SYSTEM_COMPLETE_FIX.md)
+- 📊 [CSV Upload Endpoint Fix](docs/fixes/CSV_UPLOAD_ENDPOINT_FIX.md)
+- 🚚 [Order Status Fix](docs/fixes/ORDER_STATUS_FIX.md)
+- ⚡ [Realtime Updates Implementation](docs/fixes/REALTIME_UPDATES_IMPLEMENTATION.md)
+- 💻 [User Frontend Crash Fix](docs/fixes/USER_FRONTEND_CRASH_FIX.md)

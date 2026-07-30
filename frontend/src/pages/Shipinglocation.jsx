@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { API_BASE_URL } from "../config/api";
+import { FiUser, FiMapPin, FiPlus, FiEdit2, FiTrash2, FiCheck } from "react-icons/fi";
 
 export default function ShippingLocations({ userData, userId }) {
-  // State variables for User Address
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [city, setCity] = useState("");
@@ -13,7 +12,6 @@ export default function ShippingLocations({ userData, userId }) {
   const [phone, setPhone] = useState("");
   const [age, setAge] = useState("");
 
-  // Function to handle save address
   const handleSaveAddress = async () => {
     if (!firstName || !lastName || !city || !postalCode || !country || !address) {
       alert("กรุณากรอกข้อมูลให้ครบทุกช่อง");
@@ -27,7 +25,7 @@ export default function ShippingLocations({ userData, userId }) {
         return;
       }
 
-      const response = await fetch(`${API_BASE_URL}/api/users/save-address`, {
+      const response = await fetch("http://localhost:3001/api/users/save-address", {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
@@ -51,11 +49,7 @@ export default function ShippingLocations({ userData, userId }) {
         window.location.reload();
       } else {
         const errorData = await response.json();
-        if (response.status === 401) {
-          alert("กรุณาเข้าสู่ระบบใหม่");
-        } else {
-          alert("บันทึกที่อยู่ล้มเหลว: " + errorData.message);
-        }
+        alert("บันทึกที่อยู่ล้มเหลว: " + (errorData.message || ""));
       }
     } catch (error) {
       console.error(error);
@@ -63,7 +57,6 @@ export default function ShippingLocations({ userData, userId }) {
     }
   };
 
-  // Function to handle delete address
   const handleDeleteAddress = async (addressId) => {
     if (window.confirm("คุณแน่ใจหรือไม่ที่จะลบที่อยู่นี้?")) {
       try {
@@ -73,7 +66,7 @@ export default function ShippingLocations({ userData, userId }) {
           return;
         }
 
-        const response = await fetch(`${API_BASE_URL}/api/users/delete-address/${userId}/${addressId}`, {
+        const response = await fetch(`http://localhost:3001/api/users/delete-address/${userId}/${addressId}`, {
           method: "DELETE",
           headers: { 
             "Content-Type": "application/json",
@@ -86,11 +79,7 @@ export default function ShippingLocations({ userData, userId }) {
           window.location.reload();
         } else {
           const errorData = await response.json();
-          if (response.status === 401) {
-            alert("กรุณาเข้าสู่ระบบใหม่");
-          } else {
-            alert("ลบที่อยู่ล้มเหลว: " + errorData.message);
-          }
+          alert("ลบที่อยู่ล้มเหลว: " + (errorData.message || ""));
         }
       } catch (error) {
         console.error(error);
@@ -99,7 +88,6 @@ export default function ShippingLocations({ userData, userId }) {
     }
   };
 
-  // State for editing address
   const [editingAddressId, setEditingAddressId] = useState(null);
   const [editFirstName, setEditFirstName] = useState("");
   const [editLastName, setEditLastName] = useState("");
@@ -110,20 +98,18 @@ export default function ShippingLocations({ userData, userId }) {
   const [editPhone, setEditPhone] = useState("");
   const [editAge, setEditAge] = useState("");
 
-  // Open edit form and populate fields
-  const handleEditAddress = (address) => {
-    setEditingAddressId(address._id);
-    setEditFirstName(address.firstName || "");
-    setEditLastName(address.lastName || "");
-    setEditCity(address.city || "");
-    setEditPostalCode(address.postalCode || "");
-    setEditCountry(address.country || "");
-    setEditAddress(address.address || "");
-    setEditPhone(address.phone || "");
-    setEditAge(address.age || "");
+  const handleEditAddress = (addr) => {
+    setEditingAddressId(addr._id);
+    setEditFirstName(addr.firstName || "");
+    setEditLastName(addr.lastName || "");
+    setEditCity(addr.city || "");
+    setEditPostalCode(addr.postalCode || "");
+    setEditCountry(addr.country || "");
+    setEditAddress(addr.address || "");
+    setEditPhone(addr.phone || "");
+    setEditAge(addr.age || "");
   };
 
-  // Save edited address
   const handleSaveEditAddress = async () => {
     if (!editFirstName || !editLastName || !editCity || !editPostalCode || !editCountry || !editAddress) {
       alert("กรุณากรอกข้อมูลให้ครบทุกช่อง");
@@ -136,7 +122,7 @@ export default function ShippingLocations({ userData, userId }) {
         return;
       }
 
-      const response = await fetch(`${API_BASE_URL}/api/users/update-address/${userId}/${editingAddressId}`, {
+      const response = await fetch(`http://localhost:3001/api/users/update-address/${userId}/${editingAddressId}`, {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",
@@ -158,11 +144,7 @@ export default function ShippingLocations({ userData, userId }) {
         window.location.reload();
       } else {
         const errorData = await response.json();
-        if (response.status === 401) {
-          alert("กรุณาเข้าสู่ระบบใหม่");
-        } else {
-          alert("อัปเดตที่อยู่ล้มเหลว: " + errorData.message);
-        }
+        alert("อัปเดตที่อยู่ล้มเหลว: " + (errorData.message || ""));
       }
     } catch (error) {
       console.error(error);
@@ -170,322 +152,114 @@ export default function ShippingLocations({ userData, userId }) {
     }
   };
 
-  // Cancel editing
-  const handleCancelEdit = () => {
-    setEditingAddressId(null);
-  };
-
   return (
-    <div className="card rounded-lg shadow-md mt-5 mx-10 bg-white">
-      <div className="mx-4 min-h-screen max-w-screen-xl sm:mx-8 xl:mx-auto">
-        <h1 className="border-b py-6 text-4xl font-semibold">Settings</h1>
-        <div className="grid grid-cols-8 pt-3 sm:grid-cols-10">
-          <div className="col-span-2 hidden sm:block">
-            <ul className="flex flex-col space-y-2">
-              <div className="flex flex-col space-y-2">
-                <NavLink
-                  to="/SettingUser"
-                  className="mt-5 cursor-pointer border-l-2 border-l-blue-700 px-2 py-2 font-semibold"
-                >
-                  Accounts
-                </NavLink>
-                <NavLink
-                  to="/ShippingLocations"
-                  className="mt-5 cursor-pointer border-l-2 border-l-blue-700 px-2 py-2 font-semibold text-blue-700 transition hover:border-l-blue-700 hover:text-blue-700"
-                >
-                  Shipping Address
-                </NavLink>
-              </div>
-            </ul>
+    <div className="page-container py-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 className="text-3xl font-extrabold text-gray-900 pb-6 border-b border-gray-200">
+          Account Settings
+        </h1>
+
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pt-8">
+          {/* Sidebar */}
+          <div className="md:col-span-3 space-y-2">
+            <NavLink
+              to="/SettingUser"
+              className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+            >
+              <FiUser className="w-4 h-4" /> Account
+            </NavLink>
+            <NavLink
+              to="/ShippingLocations"
+              className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm bg-brand-50 text-brand-600 border border-brand-200 shadow-sm"
+            >
+              <FiMapPin className="w-4 h-4" /> Shipping Addresses
+            </NavLink>
           </div>
-          <div className="col-span-8 overflow-hidden rounded-xl sm:bg-gray-50 sm:px-8 sm:shadow">
-            <div className="pt-4">
-              <h1 className="py-2 text-2xl font-semibold">
-                Shipping Locations
-              </h1>
-              <p className="text-slate-600">
-                Manage your shipping address details
-              </p>
+
+          {/* Main */}
+          <div className="md:col-span-9 bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 space-y-8">
+            <div>
+              <h2 className="text-xl font-bold text-gray-900">Shipping Addresses</h2>
+              <p className="text-xs text-gray-500 mt-1">Manage delivery locations for faster checkout</p>
             </div>
-            <hr className="mt-4 mb-8" />
 
-            <p className="py-2 text-xl font-semibold">Current Shipping Addresses</p>
-            {userData.address && userData.address.length > 0 ? (
-              userData.address.map((addr, index) => (
-                <div key={addr._id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 border-b pb-4">
-                {/* hide address details if editing */}
-                  {editingAddressId === null && (
-                    <>
-                  <div className="text-gray-600">
-                    <p><strong>{addr.firstName} {addr.lastName}</strong></p>
-                    <p>{addr.city} {addr.postalCode}</p>
-                    <p>{addr.address} {addr.phone}</p>
-                    <p>{addr.country}</p>
-                    {addr.age && <p>Age: {addr.age}</p>}
-                  </div>
-                  <div className="flex space-x-4 mt-2 sm:mt-0">
-                    <button 
-                      className="text-sm font-semibold text-blue-600 underline"
-                      onClick={() => handleEditAddress(addr)}
-                    >
-                      Edit
-                    </button>
-                    <button 
-                      className="text-sm font-semibold text-red-600 underline"
-                      onClick={() => handleDeleteAddress(addr._id)}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                    </>
-                  )}
-                  {/* Edit Address Form */}
-                  {editingAddressId === addr._id && (
-                    <div className="w-full bg-white border rounded-lg p-4 mt-4">
-                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {/* List */}
+            <div className="space-y-4">
+              {userData.address && userData.address.length > 0 ? (
+                userData.address.map((addr) => (
+                  <div key={addr._id} className="p-5 rounded-2xl border border-gray-100 bg-gray-50/50 hover:bg-gray-50 transition-colors">
+                    {editingAddressId !== addr._id ? (
+                      <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
                         <div>
-                          <label htmlFor="edit-first-name" className="block text-sm text-gray-500">First Name</label>
-                          <input
-                            type="text"
-                            id="edit-first-name"
-                            className="w-full rounded-md border-2 border-gray-300 py-2 px-4 text-gray-700 focus:border-blue-600 focus:outline-none"
-                            value={editFirstName}
-                            onChange={(e) => setEditFirstName(e.target.value)}
-                          />
+                          <p className="font-bold text-gray-900 text-sm">{addr.firstName} {addr.lastName}</p>
+                          <p className="text-xs text-gray-600 mt-1">{addr.address}, {addr.city} {addr.postalCode}</p>
+                          <p className="text-xs text-gray-500 mt-0.5">{addr.country} · {addr.phone}</p>
                         </div>
-                        <div>
-                          <label htmlFor="edit-last-name" className="block text-sm text-gray-500">Last Name</label>
-                          <input
-                            type="text"
-                            id="edit-last-name"
-                            className="w-full rounded-md border-2 border-gray-300 py-2 px-4 text-gray-700 focus:border-blue-600 focus:outline-none"
-                            value={editLastName}
-                            onChange={(e) => setEditLastName(e.target.value)}
-                          />
-                        </div>
-                        <div>
-                          <label htmlFor="edit-city" className="block text-sm text-gray-500">City</label>
-                          <input
-                            type="text"
-                            id="edit-city"
-                            className="w-full rounded-md border-2 border-gray-300 py-2 px-4 text-gray-700 focus:border-blue-600 focus:outline-none"
-                            value={editCity}
-                            onChange={(e) => setEditCity(e.target.value)}
-                          />
-                        </div>
-                        <div>
-                          <label htmlFor="edit-postal-code" className="block text-sm text-gray-500">Postal Code</label>
-                          <input
-                            type="text"
-                            id="edit-postal-code"
-                            className="w-full rounded-md border-2 border-gray-300 py-2 px-4 text-gray-700 focus:border-blue-600 focus:outline-none"
-                            value={editPostalCode}
-                            onChange={(e) => setEditPostalCode(e.target.value)}
-                          />
-                        </div>
-                        <div>
-                          <label htmlFor="edit-phone-number" className="block text-sm text-gray-500">Phone Number</label>
-                          <input
-                            type="number"
-                            id="edit-phone-number"
-                            className="w-full rounded-md border-2 border-gray-300 py-2 px-4 text-gray-700 focus:border-blue-600 focus:outline-none"
-                            value={editPhone}
-                            onChange={(e) => setEditPhone(e.target.value)}
-                          />
-                        </div>
-                        <div>
-                          <label htmlFor="edit-age" className="block text-sm text-gray-500">Age</label>
-                          <input
-                            type="number"
-                            id="edit-age"
-                            className="w-full rounded-md border-2 border-gray-300 py-2 px-4 text-gray-700 focus:border-blue-600 focus:outline-none"
-                            value={editAge}
-                            onChange={(e) => setEditAge(e.target.value)}
-                          />
-                        </div>
-                        <div className="sm:col-span-2">
-                          <label htmlFor="edit-country" className="block text-sm text-gray-500">Country</label>
-                          <input
-                            type="text"
-                            id="edit-country"
-                            className="w-full rounded-md border-2 border-gray-300 py-2 px-4 text-gray-700 focus:border-blue-600 focus:outline-none"
-                            value={editCountry}
-                            onChange={(e) => setEditCountry(e.target.value)}
-                          />
-                        </div>
-                        <div className="sm:col-span-2">
-                          <label htmlFor="edit-address" className="block text-sm text-gray-500">Address</label>
-                          <input
-                            type="text"
-                            id="edit-address"
-                            className="w-full rounded-md border-2 border-gray-300 py-2 px-4 text-gray-700 focus:border-blue-600 focus:outline-none"
-                            value={editAddress}
-                            onChange={(e) => setEditAddress(e.target.value)}
-                          />
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handleEditAddress(addr)}
+                            className="btn-ghost text-xs !py-1.5 !px-3 inline-flex items-center gap-1.5 border border-gray-200"
+                          >
+                            <FiEdit2 className="w-3.5 h-3.5" /> Edit
+                          </button>
+                          <button
+                            onClick={() => handleDeleteAddress(addr._id)}
+                            className="text-xs font-semibold text-rose-600 hover:text-rose-700 hover:bg-rose-50 px-3 py-1.5 rounded-xl transition-colors inline-flex items-center gap-1.5"
+                          >
+                            <FiTrash2 className="w-3.5 h-3.5" /> Delete
+                          </button>
                         </div>
                       </div>
-                      <div className="mt-4 flex justify-end space-x-2">
-                        <button
-                          onClick={handleCancelEdit}
-                          className="rounded-lg bg-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-400 transition-colors"
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          onClick={handleSaveEditAddress}
-                          className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition-colors"
-                        >
-                          Save Changes
-                        </button>
+                    ) : (
+                      /* Edit Form */
+                      <div className="space-y-4 pt-2">
+                        <h4 className="font-bold text-sm text-gray-900">Edit Address</h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <input type="text" value={editFirstName} onChange={(e) => setEditFirstName(e.target.value)} placeholder="First Name" className="input-field text-xs !py-2" />
+                          <input type="text" value={editLastName} onChange={(e) => setEditLastName(e.target.value)} placeholder="Last Name" className="input-field text-xs !py-2" />
+                          <input type="text" value={editCity} onChange={(e) => setEditCity(e.target.value)} placeholder="City" className="input-field text-xs !py-2" />
+                          <input type="text" value={editPostalCode} onChange={(e) => setEditPostalCode(e.target.value)} placeholder="Postal Code" className="input-field text-xs !py-2" />
+                          <input type="text" value={editPhone} onChange={(e) => setEditPhone(e.target.value)} placeholder="Phone" className="input-field text-xs !py-2" />
+                          <input type="text" value={editCountry} onChange={(e) => setEditCountry(e.target.value)} placeholder="Country" className="input-field text-xs !py-2" />
+                          <input type="text" value={editAddress} onChange={(e) => setEditAddress(e.target.value)} placeholder="Full Address" className="input-field text-xs !py-2 sm:col-span-2" />
+                        </div>
+                        <div className="flex justify-end gap-2 pt-2">
+                          <button onClick={() => setEditingAddressId(null)} className="btn-ghost text-xs !py-1.5">Cancel</button>
+                          <button onClick={handleSaveEditAddress} className="btn-primary text-xs !py-1.5 !px-4">Save</button>
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-10 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                  <FiMapPin className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                  <p className="text-sm text-gray-500">No shipping addresses saved yet.</p>
                 </div>
-              ))
-            ) : (
-              <p className="text-gray-600 mb-6">No shipping addresses set</p>
-            )}
+              )}
+            </div>
 
-            <hr className="mt-4 mb-8" />
-            <p className="py-2 text-xl font-semibold">
-              Add New Shipping Address
-            </p>
-            {/* Hide add form if editing */}
+            {/* Add New Form */}
             {editingAddressId === null && (
-              <>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div>
-                    <label
-                      htmlFor="first-name"
-                      className="block text-sm text-gray-500"
-                    >
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      id="first-name"
-                      className="w-full rounded-md border-2 border-gray-300 py-2 px-4 text-gray-700 focus:border-blue-600 focus:outline-none"
-                      placeholder="John"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="last-name"
-                      className="block text-sm text-gray-500"
-                    >
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      id="last-name"
-                      className="w-full rounded-md border-2 border-gray-300 py-2 px-4 text-gray-700 focus:border-blue-600 focus:outline-none"
-                      placeholder="Doe"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="city" className="block text-sm text-gray-500">
-                      City
-                    </label>
-                    <input
-                      type="text"
-                      id="city"
-                      className="w-full rounded-md border-2 border-gray-300 py-2 px-4 text-gray-700 focus:border-blue-600 focus:outline-none"
-                      placeholder="New York"
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="postal-code"
-                      className="block text-sm text-gray-500"
-                    >
-                      Postal Code
-                    </label>
-                    <input
-                      type="text"
-                      id="postal-code"
-                      className="w-full rounded-md border-2 border-gray-300 py-2 px-4 text-gray-700 focus:border-blue-600 focus:outline-none"
-                      placeholder="10001"
-                      value={postalCode}
-                      onChange={(e) => setPostalCode(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="phone-number"
-                      className="block text-sm text-gray-500"
-                    >
-                      Phone Number
-                    </label>
-                    <input
-                      type="number"
-                      id="phone-number"
-                      className="w-full rounded-md border-2 border-gray-300 py-2 px-4 text-gray-700 focus:border-blue-600 focus:outline-none"
-                      placeholder="1234567890"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="age" className="block text-sm text-gray-500">
-                      Age
-                    </label>
-                    <input
-                      type="number"
-                      id="age"
-                      className="w-full rounded-md border-2 border-gray-300 py-2 px-4 text-gray-700 focus:border-blue-600 focus:outline-none"
-                      placeholder="18"
-                      value={age}
-                      onChange={(e) => setAge(e.target.value)}
-                    />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <label
-                      htmlFor="country"
-                      className="block text-sm text-gray-500"
-                    >
-                      Country
-                    </label>
-                    <input
-                      type="text"
-                      id="country"
-                      className="w-full rounded-md border-2 border-gray-300 py-2 px-4 text-gray-700 focus:border-blue-600 focus:outline-none"
-                      placeholder="United States"
-                      value={country}
-                      onChange={(e) => setCountry(e.target.value)}
-                    />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <label
-                      htmlFor="address"
-                      className="block text-sm text-gray-500"
-                    >
-                      Address
-                    </label>
-                    <input
-                      type="text"
-                      id="address"
-                      className="w-full rounded-md border-2 border-gray-300 py-2 px-4 text-gray-700 focus:border-blue-600 focus:outline-none"
-                      placeholder="123 Main St"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                    />
-                  </div>
+              <div className="pt-6 border-t border-gray-100">
+                <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-4">
+                  <FiPlus className="text-brand-500" /> Add New Address
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="First Name *" className="input-field text-sm !py-2.5" />
+                  <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Last Name *" className="input-field text-sm !py-2.5" />
+                  <input type="text" value={city} onChange={(e) => setCity(e.target.value)} placeholder="City *" className="input-field text-sm !py-2.5" />
+                  <input type="text" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} placeholder="Postal Code *" className="input-field text-sm !py-2.5" />
+                  <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone Number" className="input-field text-sm !py-2.5" />
+                  <input type="text" value={country} onChange={(e) => setCountry(e.target.value)} placeholder="Country *" className="input-field text-sm !py-2.5" />
+                  <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Full Address *" className="input-field text-sm !py-2.5 sm:col-span-2" />
                 </div>
-                <div className="mt-6 flex justify-end my-4">
-                  <button
-                    onClick={handleSaveAddress}
-                    className="rounded-lg bg-blue-600 px-6 py-2 text-white hover:bg-blue-700 transition-colors"
-                  >
+                <div className="flex justify-end pt-4">
+                  <button onClick={handleSaveAddress} className="btn-primary text-sm !py-2.5 !px-6">
                     Save Address
                   </button>
                 </div>
-              </>
+              </div>
             )}
           </div>
         </div>

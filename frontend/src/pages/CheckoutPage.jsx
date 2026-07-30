@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { API_BASE_URL } from "../config/api";
+import { Link } from "react-router-dom";
+import { FiCheck, FiShoppingBag, FiTruck, FiCreditCard, FiAlertCircle } from "react-icons/fi";
 
 export default function CheckoutPage({ userId, selectedProducts = [] }) {
   const [stockErrors, setStockErrors] = useState([]);
@@ -7,7 +8,6 @@ export default function CheckoutPage({ userId, selectedProducts = [] }) {
   const [loading, setLoading] = useState(false);
 
   const handlePlaceOrder = async () => {
-    // Map selectedProducts to expected shape: { productId, quantity }
     const productSelected = selectedProducts.map((p) => ({
       productId: p.productId?._id || p.productId,
       quantity: p.quantity || 1,
@@ -20,7 +20,7 @@ export default function CheckoutPage({ userId, selectedProducts = [] }) {
 
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/api/validate-stock`, {
+      const res = await fetch("http://localhost:3001/api/validate-stock", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ productSelected }),
@@ -29,16 +29,12 @@ export default function CheckoutPage({ userId, selectedProducts = [] }) {
       const data = await res.json();
 
       if (!res.ok || data.success === false) {
-        // Show modal with detailed stock errors
         setStockErrors(data.errors || [{ error: data.message }]);
         setShowStockModal(true);
         setLoading(false);
         return;
       }
 
-      // All items available — proceed to normal place order flow
-      // (This project previously posted to /orders/save — you can continue that flow here)
-      // For now show success popup and proceed to payment step
       alert("All items are in stock. Proceeding to payment...");
     } catch (err) {
       console.error("Error validating stock:", err);
@@ -54,364 +50,207 @@ export default function CheckoutPage({ userId, selectedProducts = [] }) {
   };
 
   return (
-    <div>
-      <div className="card rounded-lg min-h-screen shadow-md mt-5 mx-10 bg-white">
-        <div class="flex flex-co items-center border-b bg-white py-4 sm:flex-row sm:px-10 lg:px-20 xl:px-32">
-          <a href="/" class="text-2xl font-bold text-gray-800">
-            SERGENTX
-          </a>
-          <div class="mt-4 py-2 text-xs sm:mt-0 sm:ml-auto sm:text-base">
-            <div class="relative">
-              <ul class="relative flex w-full items-center justify-between space-x-2 sm:space-x-4">
-                <li class="flex items-center space-x-3 text-left sm:space-x-4">
-                  <a
-                    class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-200 text-xs font-semibold text-emerald-700"
-                    href="/"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  </a>
-                  <span class="font-semibold text-gray-900">Shop</span>
-                </li>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-                <li class="flex items-center space-x-3 text-left sm:space-x-4">
-                  <a
-                    class="flex h-6 w-6 items-center justify-center rounded-full bg-gray-600 text-xs font-semibold text-white ring ring-gray-600 ring-offset-2"
-                    href="/"
-                  >
-                    2
-                  </a>
-                  <span class="font-semibold text-gray-900">Shipping</span>
-                </li>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-                <li class="flex items-center space-x-3 text-left sm:space-x-4">
-                  <a
-                    class="flex h-6 w-6 items-center justify-center rounded-full bg-gray-400 text-xs font-semibold text-white"
-                    href="/"
-                  >
-                    3
-                  </a>
-                  <span class="font-semibold text-gray-500">Payment</span>
-                </li>
-              </ul>
+    <div className="page-container py-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header & Step Tracker */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <Link to="/" className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <span className="text-brand-500">SongTor</span> Hub
+          </Link>
+
+          {/* Stepper */}
+          <div className="flex items-center gap-4 sm:gap-8">
+            <div className="flex items-center gap-2 text-emerald-600 font-semibold text-sm">
+              <span className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700">
+                <FiCheck className="w-4 h-4" />
+              </span>
+              <span>Shop</span>
+            </div>
+            <div className="w-8 h-0.5 bg-gray-200" />
+            <div className="flex items-center gap-2 text-brand-500 font-semibold text-sm">
+              <span className="w-7 h-7 rounded-full bg-brand-500 text-white flex items-center justify-center text-xs">
+                2
+              </span>
+              <span>Shipping & Payment</span>
+            </div>
+            <div className="w-8 h-0.5 bg-gray-200" />
+            <div className="flex items-center gap-2 text-gray-400 font-medium text-sm">
+              <span className="w-7 h-7 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center text-xs">
+                3
+              </span>
+              <span>Confirmation</span>
             </div>
           </div>
         </div>
-        <div class="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32">
-          <div class="px-4 pt-8">
-            <p class="text-xl font-medium">Order Summary</p>
-            <p class="text-gray-400">
-              Check your items. And select a suitable shipping method.
-            </p>
-            <div class="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
-              <div class="flex flex-col rounded-lg bg-white sm:flex-row">
-                <img
-                  class="m-2 h-24 w-28 rounded-md border object-cover object-center"
-                  src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-                  alt=""
-                />
-                <div class="flex w-full flex-col px-4 py-4">
-                  <span class="font-semibold">
-                    Nike Air Max Pro 8888 - Super Light
-                  </span>
-                  <span class="float-right text-gray-400">42EU - 8.5US</span>
-                  <p class="text-lg font-bold">$138.99</p>
-                </div>
-              </div>
-              <div class="flex flex-col rounded-lg bg-white sm:flex-row">
-                <img
-                  class="m-2 h-24 w-28 rounded-md border object-cover object-center"
-                  src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-                  alt=""
-                />
-                <div class="flex w-full flex-col px-4 py-4">
-                  <span class="font-semibold">
-                    Nike Air Max Pro 8888 - Super Light
-                  </span>
-                  <span class="float-right text-gray-400">42EU - 8.5US</span>
-                  <p class="mt-auto text-lg font-bold">$238.99</p>
-                </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Left Column: Summary & Delivery options */}
+          <div className="lg:col-span-7 space-y-6">
+            {/* Order Items */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <h2 className="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+                <FiShoppingBag className="text-brand-500" /> Order Summary
+              </h2>
+              <p className="text-sm text-gray-500 mb-6">Review your items before proceeding</p>
+
+              <div className="space-y-4 max-h-80 overflow-y-auto pr-2">
+                {selectedProducts.map((item, idx) => {
+                  const prod = item.productId || {};
+                  const price = prod.discount > 0 ? prod.price * (1 - prod.discount / 100) : prod.price || 0;
+                  return (
+                    <div key={idx} className="flex items-center gap-4 p-3 bg-gray-50 rounded-xl">
+                      <img
+                        className="h-16 w-16 rounded-lg object-cover border border-gray-200"
+                        src={prod.imageSrc || "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519"}
+                        alt={prod.name}
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-gray-900 truncate">{prod.name || "Product Item"}</p>
+                        <p className="text-xs text-gray-500">Qty: {item.quantity || 1}</p>
+                      </div>
+                      <p className="text-base font-bold text-gray-900">${(price * (item.quantity || 1)).toFixed(2)}</p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
-            <p class="mt-8 text-lg font-medium">Shipping Methods</p>
-            <form class="mt-5 grid gap-6">
-              <div class="relative">
-                <input
-                  class="peer hidden"
-                  id="radio_1"
-                  type="radio"
-                  name="radio"
-                  checked
-                />
-                <span class="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
-                <label
-                  class="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
-                  for="radio_1"
-                >
-                  <img
-                    class="w-14 object-contain"
-                    src="/images/naorrAeygcJzX0SyNI4Y0.png"
-                    alt=""
-                  />
-                  <div class="ml-5">
-                    <span class="mt-2 font-semibold">Fedex Delivery</span>
-                    <p class="text-slate-500 text-sm leading-6">
-                      Delivery: 2-4 Days
-                    </p>
+            {/* Shipping options */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <FiTruck className="text-brand-500" /> Shipping Method
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <label className="flex items-center gap-3 p-4 rounded-xl border-2 border-brand-500 bg-brand-50/30 cursor-pointer">
+                  <input type="radio" name="shipping" defaultChecked className="text-brand-500 focus:ring-brand-500" />
+                  <div>
+                    <span className="font-semibold text-gray-900 text-sm block">Express Delivery</span>
+                    <span className="text-xs text-gray-500">2-4 Business Days ($8.00)</span>
+                  </div>
+                </label>
+                <label className="flex items-center gap-3 p-4 rounded-xl border-2 border-gray-100 hover:border-gray-200 cursor-pointer">
+                  <input type="radio" name="shipping" className="text-brand-500 focus:ring-brand-500" />
+                  <div>
+                    <span className="font-semibold text-gray-900 text-sm block">Standard Delivery</span>
+                    <span className="text-xs text-gray-500">5-7 Business Days (Free)</span>
                   </div>
                 </label>
               </div>
-              <div class="relative">
-                <input
-                  class="peer hidden"
-                  id="radio_2"
-                  type="radio"
-                  name="radio"
-                  checked
-                />
-                <span class="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
-                <label
-                  class="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
-                  for="radio_2"
-                >
-                  <img
-                    class="w-14 object-contain"
-                    src="/images/oG8xsl3xsOkwkMsrLGKM4.png"
-                    alt=""
-                  />
-                  <div class="ml-5">
-                    <span class="mt-2 font-semibold">Fedex Delivery</span>
-                    <p class="text-slate-500 text-sm leading-6">
-                      Delivery: 2-4 Days
-                    </p>
-                  </div>
-                </label>
-              </div>
-            </form>
+            </div>
           </div>
-          <div class="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0">
-            <p class="text-xl font-medium">Payment Details</p>
-            <p class="text-gray-400">
-              Complete your order by providing your payment details.
-            </p>
-            <div class="">
-              <label for="email" class="mt-4 mb-2 block text-sm font-medium">
-                Email
-              </label>
-              <div class="relative">
-                <input
-                  type="text"
-                  id="email"
-                  name="email"
-                  class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="your.email@gmail.com"
-                />
-                <div class="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 text-gray-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
-                    />
-                  </svg>
-                </div>
-              </div>
-              <label
-                for="card-holder"
-                class="mt-4 mb-2 block text-sm font-medium"
-              >
-                Card Holder
-              </label>
-              <div class="relative">
-                <input
-                  type="text"
-                  id="card-holder"
-                  name="card-holder"
-                  class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="Your full name here"
-                />
-                <div class="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 text-gray-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"
-                    />
-                  </svg>
-                </div>
-              </div>
-              <label for="card-no" class="mt-4 mb-2 block text-sm font-medium">
-                Card Details
-              </label>
-              <div class="flex">
-                <div class="relative w-7/12 flex-shrink-0">
-                  <input
-                    type="text"
-                    id="card-no"
-                    name="card-no"
-                    class="w-full rounded-md border border-gray-200 px-2 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                    placeholder="xxxx-xxxx-xxxx-xxxx"
-                  />
-                  <div class="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
-                    <svg
-                      class="h-4 w-4 text-gray-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M11 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1z" />
-                      <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2zm13 2v5H1V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1zm-1 9H2a1 1 0 0 1-1-1v-1h14v1a1 1 0 0 1-1 1z" />
-                    </svg>
-                  </div>
-                </div>
-                <input
-                  type="text"
-                  name="credit-expiry"
-                  class="w-full rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="MM/YY"
-                />
-                <input
-                  type="text"
-                  name="credit-cvc"
-                  class="w-1/6 flex-shrink-0 rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="CVC"
-                />
-              </div>
-              <label
-                for="billing-address"
-                class="mt-4 mb-2 block text-sm font-medium"
-              >
-                Billing Address
-              </label>
-              <div class="flex flex-col sm:flex-row">
-                <div class="relative flex-shrink-0 sm:w-7/12">
-                  <input
-                    type="text"
-                    id="billing-address"
-                    name="billing-address"
-                    class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                    placeholder="Street Address"
-                  />
-                  <div class="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
-                    <img
-                      class="h-4 w-4 object-contain"
-                      src="https://flagpack.xyz/_nuxt/4c829b6c0131de7162790d2f897a90fd.svg"
-                      alt=""
-                    />
-                  </div>
-                </div>
-                <select
-                  type="text"
-                  name="billing-state"
-                  class="w-full rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                >
-                  <option value="State">State</option>
-                </select>
-                <input
-                  type="text"
-                  name="billing-zip"
-                  class="flex-shrink-0 rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none sm:w-1/6 focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="ZIP"
-                />
-              </div>
 
-              <div class="mt-6 border-t border-b py-2">
-                <div class="flex items-center justify-between">
-                  <p class="text-sm font-medium text-gray-900">Subtotal</p>
-                  <p class="font-semibold text-gray-900">$399.00</p>
+          {/* Right Column: Payment Form */}
+          <div className="lg:col-span-5">
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 sticky top-24">
+              <h2 className="text-lg font-bold text-gray-900 mb-1 flex items-center gap-2">
+                <FiCreditCard className="text-brand-500" /> Payment Details
+              </h2>
+              <p className="text-sm text-gray-500 mb-6">Complete your checkout safely</p>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    className="input-field text-sm !py-2.5"
+                    placeholder="your.email@gmail.com"
+                  />
                 </div>
-                <div class="flex items-center justify-between">
-                  <p class="text-sm font-medium text-gray-900">Shipping</p>
-                  <p class="font-semibold text-gray-900">$8.00</p>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
+                    Card Holder Name
+                  </label>
+                  <input
+                    type="text"
+                    className="input-field text-sm !py-2.5 uppercase"
+                    placeholder="John Doe"
+                  />
                 </div>
-              </div>
-              <div class="mt-6 flex items-center justify-between">
-                <p class="text-sm font-medium text-gray-900">Total</p>
-                <p class="text-2xl font-semibold text-gray-900">$408.00</p>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
+                    Card Number
+                  </label>
+                  <input
+                    type="text"
+                    className="input-field text-sm !py-2.5"
+                    placeholder="4532 •••• •••• 8892"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
+                      Expiry
+                    </label>
+                    <input
+                      type="text"
+                      className="input-field text-sm !py-2.5"
+                      placeholder="MM/YY"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
+                      CVC
+                    </label>
+                    <input
+                      type="text"
+                      className="input-field text-sm !py-2.5"
+                      placeholder="123"
+                    />
+                  </div>
+                </div>
+
+                {/* Subtotal */}
+                <div className="pt-4 border-t border-gray-100 space-y-2">
+                  <div className="flex justify-between text-sm text-gray-600">
+                    <span>Shipping</span>
+                    <span>$8.00</span>
+                  </div>
+                  <div className="flex justify-between text-lg font-bold text-gray-900 pt-2 border-t border-gray-100">
+                    <span>Total</span>
+                    <span className="text-brand-500">Calculated at Checkout</span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={handlePlaceOrder}
+                  disabled={loading}
+                  className="btn-primary w-full !py-3.5 mt-4 text-base font-semibold shadow-lg shadow-brand-500/20"
+                >
+                  {loading ? "Validating stock..." : "Place Order Now"}
+                </button>
               </div>
             </div>
-            <button
-              onClick={handlePlaceOrder}
-              disabled={loading}
-              className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white disabled:opacity-60"
-            >
-              {loading ? "Checking stock..." : "Place Order"}
-            </button>
           </div>
         </div>
       </div>
 
+      {/* Stock Error Modal */}
       {showStockModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg max-w-lg w-full p-6 mx-4">
-            <h3 className="text-lg font-bold text-red-600 mb-3">สินค้าบางรายการหมดหรือจำนวนไม่พอ</h3>
-            <div className="space-y-3 max-h-64 overflow-auto mb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl">
+            <div className="flex items-center gap-3 text-red-600 mb-4">
+              <FiAlertCircle className="w-6 h-6 flex-shrink-0" />
+              <h3 className="text-lg font-bold">สินค้าบางรายการหมดหรือจำนวนไม่พอ</h3>
+            </div>
+            <div className="space-y-3 max-h-64 overflow-auto mb-6 pr-1">
               {stockErrors.map((err, idx) => (
-                <div key={idx} className="p-3 border rounded bg-red-50">
-                  <p className="font-semibold">{err.productName || err.productId || 'สินค้าบางรายการ'}</p>
-                  <p className="text-sm text-gray-600">Requested: {err.requested ?? '-'} | Available: {err.available ?? '-'}</p>
-                  <p className="text-sm text-red-600 mt-1">{err.error}</p>
+                <div key={idx} className="p-3.5 rounded-xl bg-red-50 border border-red-100">
+                  <p className="font-semibold text-sm text-gray-900">{err.productName || err.productId || 'สินค้าบางรายการ'}</p>
+                  <p className="text-xs text-gray-600 mt-0.5">Requested: {err.requested ?? '-'} | Available: {err.available ?? '-'}</p>
+                  <p className="text-xs text-red-600 font-medium mt-1">{err.error}</p>
                 </div>
               ))}
             </div>
-            <div className="flex gap-2">
-              <button onClick={closeModal} className="flex-1 bg-gray-200 py-2 rounded">ปิด</button>
-              <button onClick={() => { closeModal(); window.location.href = '/cart'; }} className="flex-1 bg-blue-600 text-white py-2 rounded">ไปที่ตะกร้าสินค้า</button>
+            <div className="flex gap-3">
+              <button onClick={closeModal} className="btn-ghost flex-1 text-sm !py-2.5">ปิด</button>
+              <button onClick={() => { closeModal(); window.location.href = '/cart'; }} className="btn-primary flex-1 text-sm !py-2.5">
+                ไปที่ตะกร้าสินค้า
+              </button>
             </div>
           </div>
         </div>

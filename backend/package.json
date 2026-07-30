@@ -4,7 +4,7 @@
   "main": "server/server.js",
   "type": "module",
   "scripts": {
-    "start": "node server/server.js",
+    "start": "npm run dev",
     "dev": "nodemon server/server.js",
     "build": "echo 'No build step defined for npm'",
     "seed-admins": "node scripts/seedAdmins.js",

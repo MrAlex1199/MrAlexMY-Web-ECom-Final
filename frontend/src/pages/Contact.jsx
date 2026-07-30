@@ -1,89 +1,128 @@
 import React from "react";
+import bg2 from "../components/bg/bg2.jpg";
+import { FiMail, FiMessageSquare, FiSend, FiMapPin, FiPhone } from "react-icons/fi";
 
-export default function contact() {
+export default function Contact() {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert("ขอบคุณสำหรับการติดต่อ ทีมงานจะตอบกลับโดยเร็วที่สุด");
+  };
+
   return (
-    <div>
-      <div className="bg-center  bg-[url('../components/bg/bg2.jpg')] bg-gray-700 bg-blend-multiply">
-        <div className="px-4 mx-auto max-w-screen-2xl text-center py-24 lg:py-56">
-          <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-white md:text-5xl lg:text-6xl">
+    <div className="page-container pb-16">
+      {/* Hero Header */}
+      <div className="relative overflow-hidden bg-gray-900 py-20 sm:py-28">
+        <img src={bg2} alt="Contact Hero" className="absolute inset-0 w-full h-full object-cover object-center opacity-30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-600/80 to-accent-600/80" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-4xl font-extrabold text-white sm:text-5xl drop-shadow-md">
             Contact Us
           </h1>
-          <p className="mb-8 text-lg font-normal text-gray-300 lg:text-xl sm:px-16 lg:px-48">
-            Got a technical issue? Want to send feedback about a beta feature?
-            Need details about our Business plan? Let us know.
+          <p className="mt-4 text-base sm:text-lg text-white/90 max-w-xl mx-auto drop-shadow">
+            Have questions or feedback? We're here to help you anytime.
           </p>
         </div>
       </div>
-      <div className="flex flex-col -mt-40">
-        <div className="card rounded-lg shadow-md mx-10 bg-white">
-          <div className="container mx-auto">
-            <div className="flex flex-wrap justify-center mx-auto p-10">
-              <div className="grid mb-8 border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 md:mb-12 md:grid-cols-1 bg-white dark:bg-gray-800">
-                <section className="bg-white dark:bg-gray-900">
-                  <div className="py-8 lg:py-16 px-4 mx-auto max-w-screen-md">
-                    <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white">
-                      Contact Us
-                    </h2>
-                    <p className="mb-8 lg:mb-16 font-light text-center text-gray-500 dark:text-gray-400 sm:text-xl">
-                      Got a technical issue? Want to send feedback about a beta
-                      feature? Need details about our Business plan? Let us
-                      know.
-                    </p>
-                    <form action="#" className="space-y-8">
-                      <div>
-                        <label
-                          for="email"
-                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                        >
-                          Your email
-                        </label>
-                        <input
-                          type="email"
-                          id="email"
-                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light"
-                          placeholder="name@gmail.com"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label
-                          for="subject"
-                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                        >
-                          Subject
-                        </label>
-                        <input
-                          type="text"
-                          id="subject"
-                          className="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light"
-                          placeholder="Let us know how we can help you"
-                          required
-                        />
-                      </div>
-                      <div className="sm:col-span-2">
-                        <label
-                          for="message"
-                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
-                        >
-                          Your message
-                        </label>
-                        <textarea
-                          id="message"
-                          rows="6"
-                          className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg shadow-sm border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                          placeholder="Leave a comment..."
-                        ></textarea>
-                      </div>
-                      <button
-                        type="submit"
-                        className="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-primary-700 sm:w-fit hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                      >
-                        Send message
-                      </button>
-                    </form>
-                  </div>
-                </section>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Contact Info Sidebar */}
+          <div className="lg:col-span-4 space-y-4">
+            <div className="bg-white rounded-2xl p-6 shadow-md border border-gray-100 space-y-6">
+              <h3 className="text-lg font-bold text-gray-900">Get in Touch</h3>
+              
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 text-brand-500">
+                  <FiMail className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Email Us</p>
+                  <p className="text-sm font-medium text-gray-900 mt-0.5">support@songtorhub.com</p>
+                </div>
               </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 text-brand-500">
+                  <FiPhone className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Call Support</p>
+                  <p className="text-sm font-medium text-gray-900 mt-0.5">+66 (0) 2 123 4567</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 text-brand-500">
+                  <FiMapPin className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Office</p>
+                  <p className="text-sm font-medium text-gray-900 mt-0.5">Bangkok, Thailand</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Form */}
+          <div className="lg:col-span-8">
+            <div className="bg-white rounded-2xl p-8 shadow-md border border-gray-100">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Send Us a Message</h2>
+              <p className="text-sm text-gray-500 mb-6">Fill out the form below and our team will get back to you shortly.</p>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label htmlFor="email" className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
+                    Your Email
+                  </label>
+                  <div className="relative">
+                    <FiMail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <input
+                      type="email"
+                      id="email"
+                      className="input-field text-sm !pl-10 !py-2.5"
+                      placeholder="name@gmail.com"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="subject" className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
+                    Subject
+                  </label>
+                  <div className="relative">
+                    <FiMessageSquare className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <input
+                      type="text"
+                      id="subject"
+                      className="input-field text-sm !pl-10 !py-2.5"
+                      placeholder="How can we help you?"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="message" className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
+                    Your Message
+                  </label>
+                  <textarea
+                    id="message"
+                    rows={5}
+                    className="input-field text-sm !py-2.5"
+                    placeholder="Leave your comments or questions..."
+                    required
+                  ></textarea>
+                </div>
+
+                <button
+                  type="submit"
+                  className="btn-primary w-full sm:w-auto inline-flex items-center gap-2 !px-8 !py-3 text-sm font-semibold"
+                >
+                  <FiSend className="w-4 h-4" /> Send Message
+                </button>
+              </form>
             </div>
           </div>
         </div>
