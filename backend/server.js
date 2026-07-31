@@ -106,10 +106,7 @@ cloudinary.config({
 
 // Connect to MongoDB
 mongoose
-  .connect(mongoURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(mongoURI)
   .then(() => {
     console.log(chalk.green("MongoDB connected successfully to database"));
   })
