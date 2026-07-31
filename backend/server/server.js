@@ -7,6 +7,7 @@ import { v2 as cloudinary } from "cloudinary";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import path from "path";
+import fs from "fs";
 import { fileURLToPath } from "url";
 
 // Import middleware
@@ -156,18 +157,24 @@ const __dirname = path.dirname(__filename);
 
 if (process.env.NODE_ENV === 'production') {
   const frontendBuildPath = path.join(__dirname, '..', 'frontend', 'build');
-  app.use(express.static(frontendBuildPath));
+  const indexPath = path.join(frontendBuildPath, 'index.html');
   
-  // Catch-all: send React's index.html for any non-API route
-  app.get('*', (req, res, next) => {
-    // Skip API routes
-    if (req.path.startsWith('/api/') || req.path === '/health') {
-      return next();
-    }
-    res.sendFile(path.join(frontendBuildPath, 'index.html'));
-  });
-  
-  console.log(chalk.cyan(`📦 Serving React frontend from: ${frontendBuildPath}`));
+  if (fs.existsSync(indexPath)) {
+    app.use(express.static(frontendBuildPath));
+    
+    // Catch-all: send React's index.html for any non-API route
+    app.get('*', (req, res, next) => {
+      // Skip API routes
+      if (req.path.startsWith('/api/') || req.path === '/health') {
+        return next();
+      }
+      res.sendFile(indexPath);
+    });
+    
+    console.log(chalk.cyan(`📦 Serving React frontend from: ${frontendBuildPath}`));
+  } else {
+    console.log(chalk.yellow(`⚠️ Frontend build not found at ${frontendBuildPath}. Running API only.`));
+  }
 }
 
 // Error handling middleware (must be last)
