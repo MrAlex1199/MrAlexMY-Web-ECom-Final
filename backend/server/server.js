@@ -23,6 +23,9 @@ import userRoutes from '../routes/users.js';
 
 const app = express();
 
+// Trust proxy for Railway and express-rate-limit
+app.set('trust proxy', 1);
+
 // Environment validation
 if (!process.env.MONGO) {
   console.error(chalk.red("MONGO environment variable is required"));
