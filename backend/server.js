@@ -6,6 +6,9 @@ import chalk from "chalk";
 import { v2 as cloudinary } from "cloudinary";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
 
 // Import middleware
 import { errorHandler, notFound } from './middleware/errorHandler.js';
@@ -21,6 +24,9 @@ import userRoutes from './routes/users.js';
 
 const app = express();
 
+// Trust proxy for Railway and express-rate-limit
+app.set('trust proxy', 1);
+
 // Environment validation
 if (!process.env.MONGO) {
   console.error(chalk.red("MONGO environment variable is required"));
@@ -35,24 +41,14 @@ if (!process.env.JWT_SECRET) {
 const mongoURI = process.env.MONGO;
 const PORT = process.env.PORT || 3001;
 
-// Security middleware
+// Security middleware (CSP disabled for development)
 app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],
-      imgSrc: ["'self'", "data:", "https://res.cloudinary.com"],
-      scriptSrc: ["'self'"],
-      connectSrc: ["'self'"]
-    }
-  }
+  contentSecurityPolicy: false
 }));
 
 // CORS configuration
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps, curl, server-to-server)
     if (!origin) return callback(null, true);
     
     const allowedOrigins = process.env.ALLOWED_ORIGINS
@@ -60,7 +56,7 @@ const corsOptions = {
       : [
           'http://localhost:3000',
           'http://127.0.0.1:3000',
-          /\.railway\.app$/ // Automatically allow any Railway app subdomain
+          /\.railway\.app$/
         ];
         
     const isAllowed = allowedOrigins.some((allowed) => {
@@ -71,7 +67,7 @@ const corsOptions = {
     if (isAllowed) {
       callback(null, true);
     } else {
-      callback(null, true); // Fallback allow to avoid blocking valid deployment domains
+      callback(null, true);
     }
   },
   credentials: true,
@@ -134,6 +130,7 @@ app.use('/api/users', userRoutes);
 
 // Legacy route compatibility (gradually migrate these)
 app.use('/', authRoutes); // For /login, /register, etc.
+app.use('/', cartRoutes); // For /save-selected-products, etc.
 app.use('/cart', cartRoutes);
 app.use('/orders', orderRoutes);
 app.use('/', userRoutes); // For /save-address, etc.
@@ -153,6 +150,32 @@ app.get('/api', (req, res) => {
     documentation: '/api/docs' // Future: Add Swagger/OpenAPI docs
   });
 });
+
+// Serve React Frontend in production
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+if (process.env.NODE_ENV === 'production') {
+  const frontendBuildPath = path.join(__dirname, '..', 'frontend', 'build');
+  const indexPath = path.join(frontendBuildPath, 'index.html');
+  
+  if (fs.existsSync(indexPath)) {
+    app.use(express.static(frontendBuildPath));
+    
+    // Catch-all: send React's index.html for any non-API route
+    app.get('*', (req, res, next) => {
+      // Skip API routes
+      if (req.path.startsWith('/api/') || req.path === '/health') {
+        return next();
+      }
+      res.sendFile(indexPath);
+    });
+    
+    console.log(chalk.cyan(`📦 Serving React frontend from: ${frontendBuildPath}`));
+  } else {
+    console.log(chalk.yellow(`⚠️ Frontend build not found at ${frontendBuildPath}. Running API only.`));
+  }
+}
 
 // Error handling middleware (must be last)
 app.use(notFound);
