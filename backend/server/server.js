@@ -6,6 +6,8 @@ import chalk from "chalk";
 import { v2 as cloudinary } from "cloudinary";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
+import path from "path";
+import { fileURLToPath } from "url";
 
 // Import middleware
 import { errorHandler, notFound } from '../middleware/errorHandler.js';
@@ -144,6 +146,26 @@ app.get('/api', (req, res) => {
     documentation: '/api/docs' // Future: Add Swagger/OpenAPI docs
   });
 });
+
+// Serve React Frontend in production
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+if (process.env.NODE_ENV === 'production') {
+  const frontendBuildPath = path.join(__dirname, '..', '..', 'frontend', 'build');
+  app.use(express.static(frontendBuildPath));
+  
+  // Catch-all: send React's index.html for any non-API route
+  app.get('*', (req, res, next) => {
+    // Skip API routes
+    if (req.path.startsWith('/api/') || req.path === '/health') {
+      return next();
+    }
+    res.sendFile(path.join(frontendBuildPath, 'index.html'));
+  });
+  
+  console.log(chalk.cyan('📦 Serving React frontend from build folder'));
+}
 
 // Error handling middleware (must be last)
 app.use(notFound);
