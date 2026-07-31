@@ -298,6 +298,7 @@ export default function Overview({ adminData }) {
     }, 15000); // 15 second timeout
 
     return () => clearTimeout(timeoutId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateRange]); // Removed generateSalesByDay from dependency array to prevent infinite loop
 
   // Auto-refresh dashboard data every 5 minutes

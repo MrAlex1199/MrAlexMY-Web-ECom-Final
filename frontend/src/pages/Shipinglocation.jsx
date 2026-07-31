@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { FiUser, FiMapPin, FiPlus, FiEdit2, FiTrash2, FiCheck } from "react-icons/fi";
+import { FiUser, FiMapPin, FiPlus, FiEdit2, FiTrash2 } from "react-icons/fi";
 
 export default function ShippingLocations({ userData, userId }) {
   const [firstName, setFirstName] = useState("");
@@ -10,7 +10,7 @@ export default function ShippingLocations({ userData, userId }) {
   const [country, setCountry] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
-  const [age, setAge] = useState("");
+  const [age] = useState("");
 
   const handleSaveAddress = async () => {
     if (!firstName || !lastName || !city || !postalCode || !country || !address) {

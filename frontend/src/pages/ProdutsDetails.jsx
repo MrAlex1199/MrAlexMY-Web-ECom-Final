@@ -238,6 +238,7 @@ export default function ProductsDetails({ userId, userData }) {
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchProduct(); }, [id]);
 
   const handleAddToBag = async () => {

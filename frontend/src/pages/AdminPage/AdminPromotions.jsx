@@ -47,6 +47,7 @@ export default function AdminPromotions({ adminData }) {
     }, 10000); // Check every 10 seconds for promotions
 
     return unsubscribe;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [products.length]);
 
   // Auto-refresh promotions every 30 seconds

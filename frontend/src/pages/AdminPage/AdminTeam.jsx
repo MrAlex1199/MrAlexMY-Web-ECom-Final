@@ -20,6 +20,7 @@ export default function AdminTeam({ adminData }) {
 
   useEffect(() => {
     fetchTeam();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchTeam = async () => {
@@ -108,6 +109,7 @@ export default function AdminTeam({ adminData }) {
     }, 60 * 1000); // 60 seconds
 
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!adminData) {

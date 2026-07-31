@@ -4,7 +4,6 @@ import {
   Bars3Icon,
   ShoppingBagIcon,
   XMarkIcon,
-  UserCircleIcon,
   ArrowRightOnRectangleIcon,
   Cog6ToothIcon,
   ClipboardDocumentListIcon,

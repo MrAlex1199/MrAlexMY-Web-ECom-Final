@@ -45,13 +45,13 @@ export default function Footer() {
             </p>
             {/* Social icons */}
             <div className="flex items-center gap-3 mt-5">
-              <a href="#" className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-800 text-gray-400 hover:bg-brand-500 hover:text-white transition-all duration-200" aria-label="Facebook">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-800 text-gray-400 hover:bg-brand-500 hover:text-white transition-all duration-200" aria-label="Facebook">
                 <FaFacebookF size={14} />
               </a>
-              <a href="#" className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-800 text-gray-400 hover:bg-gradient-to-tr hover:from-purple-500 hover:to-pink-500 hover:text-white transition-all duration-200" aria-label="Instagram">
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-800 text-gray-400 hover:bg-gradient-to-tr hover:from-purple-500 hover:to-pink-500 hover:text-white transition-all duration-200" aria-label="Instagram">
                 <FaInstagram size={15} />
               </a>
-              <a href="#" className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-800 text-gray-400 hover:bg-green-500 hover:text-white transition-all duration-200" aria-label="Line">
+              <a href="https://line.me" target="_blank" rel="noopener noreferrer" className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-800 text-gray-400 hover:bg-green-500 hover:text-white transition-all duration-200" aria-label="Line">
                 <FaLine size={15} />
               </a>
               <a href="mailto:support@songtorhub.com" className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-800 text-gray-400 hover:bg-brand-500 hover:text-white transition-all duration-200" aria-label="Email">
