@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { API_BASE_URL } from "../../config/api";
 
 export default function Sidebar() {
   const [orderCount, setOrderCount] = useState(0);
@@ -9,7 +10,7 @@ export default function Sidebar() {
     async function fetchOrders() {
       try {
         const token = localStorage.getItem('AToken');
-        const response = await fetch("http://localhost:3001/api/orders/admin/all", {
+        const response = await fetch(`${API_BASE_URL}/api/orders/admin/all`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'

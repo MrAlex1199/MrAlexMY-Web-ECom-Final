@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../../components/AdminComponents/Sidebar";
 import Header from "../../components/AdminComponents/header";
+import { API_BASE_URL } from "../../config/api";
 import {
   Users, Mail, Calendar, MapPin, Search, ChevronDown, ChevronUp, X
 } from "lucide-react";
@@ -31,7 +32,7 @@ export default function AdminManageCustomers({ adminData }) {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-        const response = await fetch("http://localhost:3001/api/users/users", {
+        const response = await fetch(`${API_BASE_URL}/api/users/users`, {
           headers: {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json"

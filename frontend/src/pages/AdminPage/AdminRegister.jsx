@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../components/logo/weblogo.jpg";
 import toast, { Toaster } from "react-hot-toast";
+import { API_BASE_URL } from "../../config/api";
 
 export default function AdminRegister() {
   const [email, setEmail] = useState("");
@@ -26,7 +27,7 @@ export default function AdminRegister() {
 
   const fetchRoles = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/auth/roles");
+      const response = await fetch(`${API_BASE_URL}/api/auth/roles`);
       const data = await response.json();
       if (data.success) {
         setRoles(data.roles);
@@ -39,7 +40,7 @@ export default function AdminRegister() {
   const checkMasterAdmin = async () => {
     try {
       // Try to create master admin - if it fails, master admin already exists
-      const response = await fetch("http://localhost:3001/api/auth/create-master-admin", {
+      const response = await fetch(`${API_BASE_URL}/api/auth/create-master-admin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" }
       });
@@ -67,7 +68,7 @@ export default function AdminRegister() {
   const createMasterAdmin = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:3001/api/auth/create-master-admin", {
+      const response = await fetch(`${API_BASE_URL}/api/auth/create-master-admin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" }
       });
@@ -93,7 +94,7 @@ export default function AdminRegister() {
 
     try {
       const token = localStorage.getItem("AToken");
-      const response = await fetch("http://localhost:3001/api/auth/admin-register", {
+      const response = await fetch(`${API_BASE_URL}/api/auth/admin-register`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import logo from "../components/logo/weblogo.jpg";
 import { FiLock, FiEye, FiEyeOff, FiKey } from "react-icons/fi";
+import { API_BASE_URL } from "../config/api";
 
 export default function PasswordReset() {
   const [searchParams] = useSearchParams();
@@ -44,7 +45,7 @@ export default function PasswordReset() {
 
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:3001/api/auth/reset-password", {
+      const response = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, newPassword }),
