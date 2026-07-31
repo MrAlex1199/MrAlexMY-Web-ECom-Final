@@ -152,7 +152,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 if (process.env.NODE_ENV === 'production') {
-  const frontendBuildPath = path.join(__dirname, '..', '..', 'frontend', 'build');
+  const frontendBuildPath = path.join(__dirname, '..', 'frontend', 'build');
   app.use(express.static(frontendBuildPath));
   
   // Catch-all: send React's index.html for any non-API route
@@ -164,7 +164,7 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(frontendBuildPath, 'index.html'));
   });
   
-  console.log(chalk.cyan('📦 Serving React frontend from build folder'));
+  console.log(chalk.cyan(`📦 Serving React frontend from: ${frontendBuildPath}`));
 }
 
 // Error handling middleware (must be last)
