@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FiUser, FiMapPin, FiMail, FiLock, FiAlertTriangle, FiX, FiEye, FiEyeOff } from "react-icons/fi";
+import { API_BASE_URL } from "../config/api";
 
 export default function Setting({ userData }) {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ export default function Setting({ userData }) {
         return;
       }
 
-      const response = await fetch("http://localhost:3001/api/auth/change-password", {
+      const response = await fetch(`${API_BASE_URL}/api/auth/change-password`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -76,7 +77,7 @@ export default function Setting({ userData }) {
         return;
       }
 
-      const response = await fetch("http://localhost:3001/api/auth/change-email", {
+      const response = await fetch(`${API_BASE_URL}/api/auth/change-email`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -111,7 +112,7 @@ export default function Setting({ userData }) {
 
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:3001/api/auth/forgot-password", {
+      const response = await fetch(`${API_BASE_URL}/api/auth/forgot-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: userData.email }),
@@ -148,7 +149,7 @@ export default function Setting({ userData }) {
         return;
       }
 
-      const response = await fetch("http://localhost:3001/api/auth/delete-account", {
+      const response = await fetch(`${API_BASE_URL}/api/auth/delete-account`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

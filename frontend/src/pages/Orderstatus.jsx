@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { FiPackage, FiTruck, FiCheckCircle, FiXCircle, FiRotateCcw, FiClock } from "react-icons/fi";
+import { API_BASE_URL } from "../config/api";
 
 export default function Orderstatus({ userId }) {
   const [filter, setFilter] = useState("In Transit");
@@ -23,7 +24,7 @@ export default function Orderstatus({ userId }) {
           return;
         }
 
-        const response = await fetch(`http://localhost:3001/api/orders/${userId}`, {
+        const response = await fetch(`${API_BASE_URL}/api/orders/${userId}`, {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${token}`,

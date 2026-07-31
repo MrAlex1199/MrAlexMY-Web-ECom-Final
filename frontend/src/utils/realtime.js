@@ -1,5 +1,6 @@
 // Real-time update utilities
 import toast from 'react-hot-toast';
+import { API_BASE_URL } from '../config/api';
 
 class RealtimeManager {
   constructor() {
@@ -72,21 +73,21 @@ class RealtimeManager {
       // Determine endpoint based on data type
       switch (dataType) {
         case 'products':
-          endpoint = 'http://localhost:3001/api/products';
+          endpoint = `${API_BASE_URL}/api/products`;
           const adminToken = localStorage.getItem("AToken");
           if (adminToken) {
             headers['Authorization'] = `Bearer ${adminToken}`;
           }
           break;
         case 'orders':
-          endpoint = 'http://localhost:3001/api/orders/admin/all';
+          endpoint = `${API_BASE_URL}/api/orders/admin/all`;
           const token = localStorage.getItem("AToken");
           if (token) {
             headers['Authorization'] = `Bearer ${token}`;
           }
           break;
         case 'users':
-          endpoint = 'http://localhost:3001/api/users/users';
+          endpoint = `${API_BASE_URL}/api/users/users`;
           const userToken = localStorage.getItem("AToken");
           if (userToken) {
             headers['Authorization'] = `Bearer ${userToken}`;

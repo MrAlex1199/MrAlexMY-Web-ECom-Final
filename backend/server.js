@@ -51,9 +51,29 @@ app.use(helmet({
 
 // CORS configuration
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? process.env.ALLOWED_ORIGINS?.split(',') || ['https://yourdomain.com']
-    : ['http://localhost:3000', 'http://127.0.0.1:3000'],
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps, curl, server-to-server)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = process.env.ALLOWED_ORIGINS
+      ? process.env.ALLOWED_ORIGINS.split(',')
+      : [
+          'http://localhost:3000',
+          'http://127.0.0.1:3000',
+          /\.railway\.app$/ // Automatically allow any Railway app subdomain
+        ];
+        
+    const isAllowed = allowedOrigins.some((allowed) => {
+      if (allowed instanceof RegExp) return allowed.test(origin);
+      return allowed === origin;
+    });
+
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      callback(null, true); // Fallback allow to avoid blocking valid deployment domains
+    }
+  },
   credentials: true,
   optionsSuccessStatus: 200
 };

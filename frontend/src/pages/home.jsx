@@ -6,6 +6,7 @@ import bg2 from "../components/bg/bg2.jpg";
 import bg3 from "../components/bg/bg3.jpg";
 import { FiArrowRight, FiChevronLeft, FiChevronRight, FiTruck, FiShield, FiRefreshCw, FiHeadphones } from "react-icons/fi";
 import { getProductImage } from "../utils/productImages";
+import { API_BASE_URL } from "../config/api";
 
 const productsPerPage = 8;
 
@@ -163,7 +164,7 @@ export default function Home() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:3001/api/products");
+        const response = await fetch(`${API_BASE_URL}/api/products`);
         const data = await response.json();
         const productsData = data.products || data.data || data || [];
         setProducts(Array.isArray(productsData) ? productsData : []);

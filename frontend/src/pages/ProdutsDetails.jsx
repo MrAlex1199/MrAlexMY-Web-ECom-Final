@@ -4,6 +4,7 @@ import { RadioGroup } from "@headlessui/react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { FiX, FiChevronLeft, FiChevronRight, FiShoppingBag, FiCheck } from "react-icons/fi";
 import { getProductImage } from "../utils/productImages";
+import { API_BASE_URL } from "../config/api";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -208,7 +209,7 @@ export default function ProductsDetails({ userId, userData }) {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`http://localhost:3001/api/products/${id}`);
+      const response = await fetch(`${API_BASE_URL}/api/products/${id}`);
       if (!response.ok) throw new Error(`Error fetching product: ${response.status}`);
       const data = await response.json();
       if (data) {
@@ -245,7 +246,7 @@ export default function ProductsDetails({ userId, userData }) {
     if (!selectedColor || !selectedSize) { alert("กรุณาเลือกสีและขนาดสินค้า"); return; }
     if (!userId || !userData) { alert("กรุณาเข้าสู่ระบบก่อนเพิ่มสินค้าในตะกร้า"); navigate("/register"); return; }
     try {
-      const response = await fetch("http://localhost:3001/save-selected-products", {
+      const response = await fetch(`${API_BASE_URL}/save-selected-products`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, productId: product._id, selectedColor, selectedSize, quantity: 1 }),
@@ -267,7 +268,7 @@ export default function ProductsDetails({ userId, userData }) {
   const handleAddComment = async (commentText, reviewImages, ratingStar) => {
     try {
       if (!userId || !userData) { alert("กรุณาเข้าสู่ระบบก่อนแสดงความคิดเห็น"); navigate("/register"); return; }
-      const response = await fetch(`http://localhost:3001/products/${id}/comments`, {
+      const response = await fetch(`${API_BASE_URL}/products/${id}/comments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, name: userData?.fname || "Anonymous", comment: commentText, reviewImg: reviewImages, rating: ratingStar }),
@@ -282,7 +283,7 @@ export default function ProductsDetails({ userId, userData }) {
 
   const handleDeleteComment = async (commentId) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/products/${id}/comments/${commentId}`, { method: "DELETE" });
+      const response = await fetch(`${API_BASE_URL}/api/products/${id}/comments/${commentId}`, { method: "DELETE" });
       if (!response.ok) throw new Error(`Failed to delete comment: ${response.status}`);
       fetchProduct();
     } catch (error) { console.error("Error deleting comment:", error); }

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "../Styles/loader.css";
 import { FiChevronLeft, FiChevronRight, FiSearch } from "react-icons/fi";
 import { getProductImage } from "../utils/productImages";
+import { API_BASE_URL } from "../config/api";
 
 const productsPerPage = 12;
 
@@ -16,7 +17,7 @@ export default function Products() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:3001/api/products");
+        const response = await fetch(`${API_BASE_URL}/api/products`);
         const data = await response.json();
         const productsData = data.products || data.data || data || [];
         setProducts(Array.isArray(productsData) ? productsData : []);
