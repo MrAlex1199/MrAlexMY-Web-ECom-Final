@@ -159,20 +159,18 @@ app.use(notFound);
 app.use(errorHandler);
 
 // Graceful shutdown
-process.on('SIGTERM', () => {
+process.on('SIGTERM', async () => {
   console.log(chalk.yellow('SIGTERM received. Shutting down gracefully...'));
-  mongoose.connection.close(() => {
-    console.log(chalk.green('MongoDB connection closed.'));
-    process.exit(0);
-  });
+  await mongoose.connection.close();
+  console.log(chalk.green('MongoDB connection closed.'));
+  process.exit(0);
 });
 
-process.on('SIGINT', () => {
+process.on('SIGINT', async () => {
   console.log(chalk.yellow('SIGINT received. Shutting down gracefully...'));
-  mongoose.connection.close(() => {
-    console.log(chalk.green('MongoDB connection closed.'));
-    process.exit(0);
-  });
+  await mongoose.connection.close();
+  console.log(chalk.green('MongoDB connection closed.'));
+  process.exit(0);
 });
 
 app.listen(PORT, () => {
